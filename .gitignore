@@ -1,0 +1,9 @@
+*~
+.coverage/
+#~
+.rbx
+*.class
+.kitchen/
+Gemfile.lock
+.vagrant/
+Vagrantfile
