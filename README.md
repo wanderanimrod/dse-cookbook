@@ -9,9 +9,9 @@ This cookbook is designed to be used in conjuction with a wrapper cookbook. Used
 
 Example in a wrapper:
 ```ruby
-node.default["java"]["jdk_version"] = "7"
-node.default["cassandra"]["seeds"] = "192.168.1.1, 192.168.1.2"
-node.default["cassandra"]["dse_version"] = "4.0.3-1"
+node.default['java']['jdk_version'] = "7"
+node.default['cassandra']['seeds'] = "192.168.1.1, 192.168.1.2"
+node.default['cassandra']['dse_version'] = "4.0.3-1"
 node.default['cassandra']['max_heap_size'] = "12G"
 node.default['cassandra']['heap_newsize'] = "1200M"
 
