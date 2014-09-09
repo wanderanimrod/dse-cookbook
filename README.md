@@ -8,6 +8,7 @@ It uses officially released Datastax packages. It can tweak the Cassandra config
 This cookbook is designed to be used in conjuction with a wrapper cookbook. Used alone, a single node cluster can be created, but in order to create a multiple node cluster a wrapper is recommended.
 
 Example in a wrapper:
+
 ```ruby
 node.default['java']['jdk_version'] = "7"
 node.default['cassandra']['seeds'] = "192.168.1.1, 192.168.1.2"
@@ -40,7 +41,7 @@ Tested on:
 
 ## Recipes
 
-The provided recipes are `dse::cassandra`, `dse::solr`, and `dse":hadoop`
+The provided recipes are `dse::cassandra`, `dse::solr`, and `dse::hadoop`
 * `dse::cassandra` will provision DSE as a cassandra node.
 * `dse::solr` will provision DSE with solr enabled.
 * `dse::hadoop` will provision DSE with hadoop enabled.
