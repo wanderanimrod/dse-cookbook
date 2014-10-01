@@ -6,7 +6,7 @@ default['cassandra']['num_tokens']             = "256"
 default['cassandra']['solr']		       = false
 default['cassandra']['hadoop']                 = false
 
-default['cassandra']['dse_version']            = "4.0.3-1"
+default['cassandra']['dse_version']            = "4.0.4-1"
 
 default['cassandra']['user']                   = "cassandra"
 default['cassandra']['group']                  = "cassandra"
