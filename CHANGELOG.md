@@ -1,6 +1,6 @@
-# CHANGELOG for cassandra
+# CHANGELOG for dse cookbook
 
-This file is used to list changes made in each version of dse-role.
+This file is used to list changes made in each version of the dse cookbook.
 
 ## 3.0.10
 * add templates and upgrade to 4.0.4 
