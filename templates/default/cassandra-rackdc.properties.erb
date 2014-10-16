@@ -16,9 +16,9 @@
 
 # These properties are used with GossipingPropertyFileSnitch and will
 # indicate the rack and dc for this node
-<% if node[:cassandra][:hadoop] %>
+<% if node['cassandra']['hadoop'] %>
 dc=hadoop<%= node['datacenter'] %>
-<% elsif node[:cassandra][:solr] %>
+<% elsif node['cassandra']['solr'] %>
 dc=solr<%= node['datacenter'] %>
 <% else %>
 dc=<%= node['datacenter'] %>

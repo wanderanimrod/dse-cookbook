@@ -31,13 +31,18 @@ template "#{node['cassandra']['dse']['conf_dir']}/dse.yaml" do
 end
 
 #set up cassandra.yaml template (contains almost all cassandra tuning properties)
+ssl_password_file = "#{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['cassandra']['dse']['password_file']}"
 template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra.yaml" do
   source "cassandra_yaml/cassandra_#{node['cassandra']['dse_version']}.yaml.erb"
   variables(
-     :dir => node['cassandra']['data_dir'],
-     #lazily get the password, since it will be created for the first time before this. then strip off the newline (this is only for ssl)
-     :ssl_password => lazy { `head -n 1 #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['cassandra']['dse']['password_file']} | tr -d "\n"` }
-           )
+    :dir => node['cassandra']['data_dir'],
+    #lazily get the password, since it will be created for the first time before this. then strip off the newline (this is only for ssl)
+    :ssl_password => lazy { 
+      if File.exists?(ssl_password_file) 
+        File.open(ssl_password_file, &:readline).chomp 
+      end
+    }
+  )
   owner node['cassandra']['user']
   group node['cassandra']['group']
   notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
