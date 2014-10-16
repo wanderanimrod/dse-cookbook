@@ -49,14 +49,8 @@ end
 
 #Check for existing dse version and the version chef wants
 #This will stop DSE before doing an upgrade (if we let chef do the upgrade)
-dse_version = Mixlib::ShellOut.new("dse -v")
-dse_version.run_command
-dse_version.error!
-dse_current_version=node['cassandra']['dse_version'].split("-")[0]
-#if dse is already installed and we want to upgrade stop the existing service
 service node['cassandra']['dse']['service_name'] do
-  action :stop
-  only_if { dse_version.stdout && dse_version.stdout != dse_current_version }
+  action :nothing
 end
 
 #install the dse-full package
@@ -67,11 +61,13 @@ when "ubuntu", "debian"
     version node['cassandra']['dse_version']
     action :install
     options '-o Dpkg::Options::="--force-confold"'
+    notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]", :delayed
   end
 when "redhat", "centos", "fedora", "scientific", "amazon"
   package "dse-full" do
     version node['cassandra']['dse_version']
     action :install
+    notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]", :delayed
   end
 end
 
