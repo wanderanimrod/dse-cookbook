@@ -109,7 +109,7 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["dse"]["service_name"]` (default: `dse`): the name of the service
  * `node["cassandra"]["dse"]["conf_dir"]` (default: `/etc/dse`): the directory of dse config files
  * `node["cassandra"]["dse"]["repo_user"]` (default: ``): the datastax username for the repo
- * `node["cassandra"]["dse"]["repo_password"]` (default: ``): the datastax password for the repo
+ * `node["cassandra"]["dse"]["repo_pass"]` (default: ``): the datastax password for the repo
  * `node["cassandra"]["dse"]["rhel_repo_url"]` (default: `http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@rpm.datastax.com/enterprise`): the rhel repo
  * `node["cassandra"]["dse"]["debian_repo_url"]` (default: `http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@debian.datastax.com/enterprise`): the debian repo
 
@@ -167,7 +167,7 @@ You can override the java url with an attribute, show below.
 
 ## Copyright & License
 
-- Author: Daniel Parker (<daniel.c.parker@target.com>)
+- Author: Daniel Parker (<danel.c.parker@target.com>)
 - Reviewer: Eric Helgeson (<erichelgeson@gmail.com>)
 
 Released under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
