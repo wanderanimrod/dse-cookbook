@@ -167,7 +167,7 @@ You can override the java url with an attribute, show below.
 
 ## Copyright & License
 
-- Author: Daniel Parker (<danel.c.parker@target.com>)
+- Author: Daniel Parker (<daniel.c.parker@target.com>)
 - Reviewer: Eric Helgeson (<erichelgeson@gmail.com>)
 
 Released under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
