@@ -94,4 +94,5 @@ service node['cassandra']['dse']['service_name'] do
   action [:enable, :start]
   #if java changes, restart dse
   subscribes :restart, "java_ark[jdk]"
+  subscribes :restart, "package[dse-full]"
 end
