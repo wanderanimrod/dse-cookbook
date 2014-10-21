@@ -37,6 +37,7 @@ This cookbook currently provides
 Tested on:
 
 * RHEL 6.3, 6.4
+* Ubuntu 14.04.1 LTS
 * Slight testing done on Ubuntu 12.04 (will require some edits)
 
 ## Recipes
