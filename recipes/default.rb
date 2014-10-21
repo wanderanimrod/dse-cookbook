@@ -30,6 +30,16 @@ template "#{node['cassandra']['dse']['conf_dir']}/dse.yaml" do
   notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
+if node['cassandra']['role_based_seeds']
+  list = []
+  search(:node, node['cassandra']['seed_role']) do |m|
+    list.push(m['ipaddress'])
+  end
+  list.sort!
+  node.default['cassandra']['seeds'] = list.join(",")
+  puts "DEBUG: #{node['cassandra']['seeds']}"
+end
+
 #set up cassandra.yaml template (contains almost all cassandra tuning properties)
 ssl_password_file = "#{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['cassandra']['dse']['password_file']}"
 template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra.yaml" do
