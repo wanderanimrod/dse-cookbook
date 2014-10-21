@@ -32,6 +32,10 @@ default['cassandra']['thrift_framed_transport_size_in_mb'] = "15"
 default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']     = nil
 
+# Role based search to assign seed nodes.
+default['cassandra']['role_based_seeds'] = false
+default['cassandra']['seed_role']        = "role:dse-seed"
+
 #GC settings
 default['cassandra']['CMSInitiatingOccupancyFraction'] = "65"
 default['cassandra']['max_heap_size'] = "8192M"
