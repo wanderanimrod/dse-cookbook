@@ -53,7 +53,7 @@ if File::exists?("/usr/bin/dse")
   dse_version = Mixlib::ShellOut.new("/usr/bin/dse -v").run_command.stdout.chomp
   puts "DEBUG: #{dse_version} = #{node['cassandra']['dse_version'].split('-')[0]}"
   unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
-    execute "nodetool flush" do
+    execute "nodetool drain" do
       timeout 30
     end
 
