@@ -5,6 +5,7 @@ default['cassandra']['initial_token']          = ""
 default['cassandra']['num_tokens']             = "256"
 default['cassandra']['solr']		       = false
 default['cassandra']['hadoop']                 = false
+default['cassandra']['spark']                  = false
 
 default['cassandra']['dse_version']            = "4.0.4-1"
 
@@ -30,6 +31,10 @@ default['cassandra']['range_request_timeout_in_ms'] = "10000"
 default['cassandra']['thrift_framed_transport_size_in_mb'] = "15"
 default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']     = nil
+
+# Role based search to assign seed nodes.
+default['cassandra']['role_based_seeds'] = false
+default['cassandra']['seed_role']        = "role:dse-seed"
 
 #GC settings
 default['cassandra']['CMSInitiatingOccupancyFraction'] = "65"

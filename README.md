@@ -37,6 +37,7 @@ This cookbook currently provides
 Tested on:
 
 * RHEL 6.3, 6.4
+* Ubuntu 14.04.1 LTS
 * Slight testing done on Ubuntu 12.04 (will require some edits)
 
 ## Recipes
@@ -85,6 +86,10 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["thrift_max_message_length_in_mb"]` (default: `nil`): the max message length of a thrift call
  * `node["cassandra"]["concurrent_compactors"]` (default: `nil`): the number of concurrent compactors to allow
 
+#### Role based seed selection
+ * `node["cassandra"]["role_based_seeds"]` (default: `false`): set to true to assign seeds based on members of dse-seed role
+ * `node['cassandra']['seed_role']` (default: `role:dse-seed`): set to a diffrent role to select seeds
+
 #### gc settings
 
  * `node["cassandra"]["CMSInitiatingOccupancyFraction"]` (default: `65`): cms occupancy fraction to use for gc
@@ -109,7 +114,7 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["dse"]["service_name"]` (default: `dse`): the name of the service
  * `node["cassandra"]["dse"]["conf_dir"]` (default: `/etc/dse`): the directory of dse config files
  * `node["cassandra"]["dse"]["repo_user"]` (default: ``): the datastax username for the repo
- * `node["cassandra"]["dse"]["repo_password"]` (default: ``): the datastax password for the repo
+ * `node["cassandra"]["dse"]["repo_pass"]` (default: ``): the datastax password for the repo
  * `node["cassandra"]["dse"]["rhel_repo_url"]` (default: `http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@rpm.datastax.com/enterprise`): the rhel repo
  * `node["cassandra"]["dse"]["debian_repo_url"]` (default: `http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@debian.datastax.com/enterprise`): the debian repo
 

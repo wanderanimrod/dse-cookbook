@@ -4,24 +4,24 @@ include_recipe "java" if node['dse']['manage_java']
 
 
 #create the data directories for Cassandra
- node['cassandra']['data_dir'].each do |dir|
+node['cassandra']['data_dir'].each do |dir|
   directory dir do
-   owner node['cassandra']['user']
-   group node['cassandra']['group']
-   mode "775"
-   recursive true
-   action :create
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+    mode "775"
+    recursive true
+    action :create
   end
 end
 
 #Make sure the commit directory exists (in case we changed it from default)
- directory node['cassandra']['commit_dir'] do
-   owner node['cassandra']['user']
-   group node['cassandra']['group']
-   mode "755"
-   recursive true
-   action :create
-  end
+directory node['cassandra']['commit_dir'] do
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+  mode "755"
+  recursive true
+  action :create
+end
 
 #Set up the datastax repo in yum or apt depending on the OS
 case node['platform']
@@ -49,12 +49,18 @@ end
 
 #Check for existing dse version and the version chef wants
 #This will stop DSE before doing an upgrade (if we let chef do the upgrade)
-dse_version=`dse -v | tr -d "\n"`
-dse_current_version=node['cassandra']['dse_version'].split("-")[0]
-#if dse is already installed and we want to upgrade stop the existing service
-service node['cassandra']['dse']['service_name'] do
-  action :stop
-  only_if { dse_version && dse_version != dse_current_version }
+if File::exists?("/usr/bin/dse")
+  dse_version = Mixlib::ShellOut.new("/usr/bin/dse -v").run_command.stdout.chomp
+  puts "DEBUG: #{dse_version} = #{node['cassandra']['dse_version'].split('-')[0]}"
+  unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
+    execute "nodetool drain" do
+      timeout 30
+    end
+
+    service node['cassandra']['dse']['service_name'] do
+      action :stop
+    end
+  end
 end
 
 #install the dse-full package
