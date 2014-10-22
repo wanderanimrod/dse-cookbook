@@ -21,9 +21,14 @@ suites:
       - recipe[dse::cassandra]
     attributes:
      datacenter: "TTC"
+     java:
+       oracle:
+         accept_oracle_download_terms: true
      cassandra:
       seeds: "10.0.2.15"
       memtable_total_space_in_mb: 2048
       memtable_flush_writers: 18
+      max_heap_size: "1G"
+      heap_newsize: "200M"
       dse:
        delegated_snitch: "org.apache.cassandra.locator.GossipingPropertyFileSnitch"
