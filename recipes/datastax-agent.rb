@@ -2,6 +2,7 @@
 package "datastax-agent" do
   version node['datastax-agent']['version']
   action :install
+  notifies :restart, 'service[datastax-agent]'
 end
 
 #Set up the stomp IP (the IP of Opscenter)
