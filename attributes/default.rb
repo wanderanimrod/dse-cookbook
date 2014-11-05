@@ -38,6 +38,7 @@ default['cassandra']['seed_role']        = "role:dse-seed"
 
 #GC settings
 default['cassandra']['CMSInitiatingOccupancyFraction'] = "65"
+default['cassandra']['MaxTenuringThreshold']           = "1"
 default['cassandra']['max_heap_size'] = "8192M"
 default['cassandra']['heap_newsize'] = "800M"
 

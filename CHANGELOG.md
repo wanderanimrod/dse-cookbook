@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the dse cookbook.
 
+## 3.0.14
+* restart the datastax-agent on new version 
+
+## 3.0.13
+* added support to set MaxTenuringThreshold in cassandra-env 
+
 ## 3.0.12
 * refactored some version checks
 * added role based seed assignment
