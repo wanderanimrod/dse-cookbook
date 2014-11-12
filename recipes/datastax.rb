@@ -2,6 +2,8 @@
 #Install java
 include_recipe "java" if node['dse']['manage_java']
 
+user node['cassandra']['user']
+group node['cassandra']['group']
 
 #create the data directories for Cassandra
 node['cassandra']['data_dir'].each do |dir|
