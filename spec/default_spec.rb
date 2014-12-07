@@ -31,7 +31,13 @@ describe 'dse with default settings' do
     expect(chef_run).to include_recipe('apt')
   end
 
-  # it 'adds the apt repository to the sources.list'
+  it 'adds the apt repository to the sources.list' do
+    expect(chef_run).to add_apt_repository('datastax').with(
+      uri: 'http://user:password@debian.datastax.com/enterprise',
+      distribution: 'stable',
+      key: 'http://debian.datastax.com/debian/repo_key'
+    )
+  end
 
   # it 'checks the current version and stops the service if it is upgrading'
 
@@ -137,4 +143,22 @@ describe 'dse with node[\'cassandra\'][\'dse\'][\'internode_encryption\'] set to
       mode: '0700'
     )
   end 
+
+  it 'generates a keystore password' do
+    expect(chef_run).to run_bash('generate keystore password').with(
+      user: 'cassandra'
+    )
+  end
+
+  it 'exports the public key' do
+    expect(chef_run).to run_bash('export public key').with(
+      user: 'cassandra'
+    )
+  end
+
+  it 'imports the public keys' do
+    expect(chef_run).to run_bash('import public keys').with(
+      user: 'cassandra'
+    )
+  end
 end
