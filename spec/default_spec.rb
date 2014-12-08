@@ -69,7 +69,7 @@ describe 'dse with default settings' do
       owner: 'cassandra',
       group: 'cassandra'
     )
-    template = chef_run.template('/etc/dse/cassandra/log4j-server.properties') 
+    template = chef_run.template('/etc/dse/cassandra/log4j-server.properties')
     expect(template).to notify('service[dse]').to(:restart)
   end
 
@@ -109,10 +109,11 @@ describe 'dse with default settings' do
 end
 
 describe 'dse with node[\'datastax-agent\'][\'enabled\'] true' do
-  let(:chef_run) { ChefSpec::ServerRunner.new do |node|
+  let(:chef_run) do
+    ChefSpec::ServerRunner.new do |node|
       node.set['datastax-agent']['enabled'] = true
     end.converge('dse')
-  }
+  end
 
   it 'installs the datastax-agent package' do
     expect(chef_run).to install_package('datastax-agent')
@@ -128,10 +129,11 @@ describe 'dse with node[\'datastax-agent\'][\'enabled\'] true' do
 end
 
 describe 'dse with node[\'cassandra\'][\'dse\'][\'internode_encryption\'] set to "all"' do
-  let(:chef_run) { ChefSpec::ServerRunner.new do |node|
+  let(:chef_run) do
+    ChefSpec::ServerRunner.new do |node|
       node.set['cassandra']['dse']['internode_encryption'] = 'all'
     end.converge('dse')
-  }
+  end
   it 'includes the dse::ssl recipe' do
     expect(chef_run).to include_recipe('dse::ssl')
   end
@@ -142,7 +144,7 @@ describe 'dse with node[\'cassandra\'][\'dse\'][\'internode_encryption\'] set to
       group: 'cassandra',
       mode: '0700'
     )
-  end 
+  end
 
   it 'generates a keystore password' do
     expect(chef_run).to run_bash('generate keystore password').with(
