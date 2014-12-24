@@ -65,10 +65,12 @@ end
 case node['platform']
 # make sure not to overwrite any conf files on upgrade
 when 'ubuntu', 'debian'
-  package 'dse-full' do
-    version node['cassandra']['dse_version']
-    action :install
-    options '-o Dpkg::Options::="--force-confold"'
+  node['cassandra']['packages'].each do |install|
+    package install do
+      version node['cassandra']['dse_version']
+      action :install
+      options '-o Dpkg::Options::="--force-confold"'
+    end
   end
 when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   package 'dse-full' do
