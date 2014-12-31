@@ -49,7 +49,11 @@ end
 # Check for existing dse version and the version chef wants
 # This will stop DSE before doing an upgrade (if we let chef do the upgrade)
 if File.exist?('/usr/bin/dse')
-  dse_version = Mixlib::ShellOut.new('/usr/bin/dse -v').run_command.stdout.chomp
+  if platform_family?("debian") 
+    dse_version = Mixlib::ShellOut.new('dpkg -l | awk \'$2=="dse" { print $3 }\'').run_command.stdout.chomp.split('-')[0]
+  elsif platform_family?("rhel", "fedora")
+    dse_version = Mixlib::ShellOut.new('/usr/bin/dse -v').run_command.stdout.chomp
+  end
   unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
     execute 'nodetool drain' do
       timeout 30
