@@ -15,14 +15,14 @@
 # limitations under the License.
 #
 
-#Set up the datastax repo in yum or apt depending on the OS
-include_recipe "dse::_repo"
+# Set up the datastax repo in yum or apt depending on the OS
+include_recipe 'dse::_repo'
 
-package "opscenter" do
+package 'opscenter' do
   version node['opscenter']['version']
   action :install
 end
 
-service "opscenterd" do
-  action [ :enable, :start ]
+service 'opscenterd' do
+  action [:enable, :start]
 end
