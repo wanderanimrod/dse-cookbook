@@ -1,4 +1,4 @@
-include_recipe "dse::configure"
+include_recipe 'dse::configure'
 
 service node['cassandra']['dse']['service_name'] do
   supports :restart => true, :status => true
