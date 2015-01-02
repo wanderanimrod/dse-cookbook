@@ -37,7 +37,6 @@ if node['cassandra']['role_based_seeds']
   end
   list.sort!
   node.default['cassandra']['seeds'] = list.join(',')
-  puts "DEBUG: #{node['cassandra']['seeds']}"
 end
 
 # set up cassandra.yaml template (contains almost all cassandra tuning properties)
