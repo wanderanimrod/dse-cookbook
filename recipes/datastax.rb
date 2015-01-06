@@ -1,6 +1,7 @@
 # This recipe sets up the yum repos, directories, tuning settings, and installs the dse package.
 # Install java
 include_recipe 'java' if node['dse']['manage_java']
+include_recipe 'dse::_repo'
 
 # create the data directories for Cassandra
 node['cassandra']['data_dir'].each do |dir|
@@ -22,34 +23,14 @@ directory node['cassandra']['commit_dir'] do
   action :create
 end
 
-# Set up the datastax repo in yum or apt depending on the OS
-case node['platform']
-when 'ubuntu', 'debian'
-  include_recipe 'apt'
-  apt_repository 'datastax' do
-    uri node['cassandra']['dse']['debian_repo_url']
-    distribution 'stable'
-    components ['main']
-    key 'http://debian.datastax.com/debian/repo_key'
-    action :add
-  end
-when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
-  # We need EPEL
-  include_recipe 'yum::default'
-  include_recipe 'yum::epel'
-  # Set up datastax repo in yum for rhel
-  yum_repository 'datastax' do
-    description 'DataStax Enterprise Repo for Apache Cassandra'
-    url node['cassandra']['dse']['rhel_repo_url']
-    repo_name 'datastax'
-    action :add
-  end
-end
-
 # Check for existing dse version and the version chef wants
 # This will stop DSE before doing an upgrade (if we let chef do the upgrade)
 if File.exist?('/usr/bin/dse')
-  dse_version = Mixlib::ShellOut.new('/usr/bin/dse -v').run_command.stdout.chomp
+  if platform_family?('debian')
+    dse_version = Mixlib::ShellOut.new('dpkg -l | awk \'$2=="dse" { print $3 }\'').run_command.stdout.chomp.split('-')[0]
+  elsif platform_family?('rhel', 'fedora')
+    dse_version = Mixlib::ShellOut.new('/usr/bin/dse -v').run_command.stdout.chomp
+  end
   unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
     execute 'nodetool drain' do
       timeout 30
@@ -65,10 +46,12 @@ end
 case node['platform']
 # make sure not to overwrite any conf files on upgrade
 when 'ubuntu', 'debian'
-  package 'dse-full' do
-    version node['cassandra']['dse_version']
-    action :install
-    options '-o Dpkg::Options::="--force-confold"'
+  node['cassandra']['packages'].each do |install|
+    package install do
+      version node['cassandra']['dse_version']
+      action :install
+      options '-o Dpkg::Options::="--force-confold"'
+    end
   end
 when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   package 'dse-full' do
