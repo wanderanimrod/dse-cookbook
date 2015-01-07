@@ -43,6 +43,21 @@ describe 'dse with default settings' do
 
   it 'installs the dse-full package' do
     expect(chef_run).to install_package('dse-full')
+    expect(chef_run).to install_package('dse-libcassandra')
+    expect(chef_run).to install_package('dse-libhadoop')
+    expect(chef_run).to install_package('dse-libhadoop-native')
+    expect(chef_run).to install_package('dse')
+    expect(chef_run).to install_package('dse-libhive')
+    expect(chef_run).to install_package('dse-hive')
+    expect(chef_run).to install_package('dse-liblog4j')
+    expect(chef_run).to install_package('dse-libmahout')
+    expect(chef_run).to install_package('dse-libpig')
+    expect(chef_run).to install_package('dse-libtomcat')
+    expect(chef_run).to install_package('dse-libsolr')
+    expect(chef_run).to install_package('dse-libspark')
+    expect(chef_run).to install_package('dse-libsqoop')
+    expect(chef_run).to install_package('dse-pig')
+    expect(chef_run).to install_package('dse-demos')
   end
 
   it 'does not include the dse::datastax-agent recipe' do
@@ -143,6 +158,12 @@ describe 'dse with node[\'cassandra\'][\'dse\'][\'internode_encryption\'] set to
       user: 'cassandra',
       group: 'cassandra',
       mode: '0700'
+    )
+  end
+
+  it 'generates a cassandra cert' do
+    expect(chef_run).to run_bash('generate cassandra cert').with(
+      user: 'cassandra'
     )
   end
 
