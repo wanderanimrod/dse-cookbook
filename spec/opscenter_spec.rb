@@ -17,6 +17,20 @@ describe 'dse::opscenter' do
     expect(chef_run).to install_package('opscenter')
   end
 
+  it 'creates the opscenterd.conf configuration file' do
+    expect(chef_run).to create_template('/etc/opscenter/opscenterd.conf').with(
+      source: 'opscenterd.conf.erb',
+      mode: '644',
+      owner: 'root',
+      group: 'root'
+    )
+  end
+
+  it 'renders the opscenterd.conf file with content from ./spec/rendered_templates/opscenterd.conf' do
+    opscenterd_conf = File.read('./spec/rendered_templates/opscenterd.conf')
+    expect(chef_run).to render_file('/etc/opscenter/opscenterd.conf').with_content(opscenterd_conf)
+  end
+
   it 'starts the opscenter service deamon' do
     expect(chef_run).to start_service('opscenterd')
   end
