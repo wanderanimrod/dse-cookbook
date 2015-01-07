@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/target/dse-cookbook.svg?branch=master)](https://travis-ci.org/target/dse-cookbook)
+
 # Datastax Enterprise Chef Cookbook (Apache Cassandra)
 This cookbook installs and configures Datastax Enterprise. More info is here ([DataStax Enterprise](http://www.datastax.com/products/)).
 

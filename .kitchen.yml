@@ -8,27 +8,23 @@ provisioner:
   name: chef_zero
 
 platforms:
-  - name: centos-6.5
-    driver_config:
-      vm_hostname: false
-      box: centos-6.5
-      network:
-        - ["forwarded_port", {guest: 9042, host: 9042}]
+  - name: ubuntu-12.04
+  - name: ubuntu-14.04
+#  - name: centos-6.5
+  - name: centos-6.6
+
 
 suites:
   - name: default
     run_list: 
       - recipe[dse::cassandra]
     attributes:
-     datacenter: "TTC"
      java:
        oracle:
          accept_oracle_download_terms: true
      cassandra:
-      seeds: "10.0.2.15"
+      seeds: "127.0.0.1"
       memtable_total_space_in_mb: 2048
       memtable_flush_writers: 18
       max_heap_size: "1G"
       heap_newsize: "200M"
-      dse:
-       delegated_snitch: "org.apache.cassandra.locator.GossipingPropertyFileSnitch"
