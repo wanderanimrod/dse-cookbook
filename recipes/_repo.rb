@@ -17,7 +17,7 @@ when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
   # Set up datastax repo in yum for rhel
   yum_repository 'datastax' do
     description 'DataStax Enterprise Repo for Apache Cassandra'
-    url node['cassandra']['dse']['rhel_repo_url']
+    baseurl node['cassandra']['dse']['rhel_repo_url']
     repo_name 'datastax'
     action :add
   end
