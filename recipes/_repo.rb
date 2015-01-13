@@ -13,12 +13,11 @@ when 'ubuntu', 'debian'
 when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
   # We need EPEL
   include_recipe 'yum::default'
-  include_recipe 'yum::epel'
+  include_recipe 'yum-epel::default'
   # Set up datastax repo in yum for rhel
   yum_repository 'datastax' do
     description 'DataStax Enterprise Repo for Apache Cassandra'
     baseurl node['cassandra']['dse']['rhel_repo_url']
-    repo_name 'datastax'
     action :add
   end
 end
