@@ -16,7 +16,7 @@ platforms:
 
 suites:
   - name: default
-    run_list: 
+    run_list:
       - recipe[dse::cassandra]
     attributes:
      java:
