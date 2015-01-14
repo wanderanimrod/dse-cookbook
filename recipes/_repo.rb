@@ -18,6 +18,7 @@ when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
   yum_repository 'datastax' do
     description 'DataStax Enterprise Repo for Apache Cassandra'
     baseurl node['cassandra']['dse']['rhel_repo_url']
+    gpgcheck false
     action :add
   end
 end
