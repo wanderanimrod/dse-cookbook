@@ -34,6 +34,7 @@ if File.exist?('/usr/bin/dse')
   unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
     execute 'nodetool drain' do
       timeout 30
+      only_if '/etc/init.d/dse status'
     end
 
     service node['cassandra']['dse']['service_name'] do
