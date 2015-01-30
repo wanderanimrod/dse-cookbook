@@ -6,3 +6,4 @@ default['cassandra']['dse']['repo_user'] = 'user'
 default['cassandra']['dse']['repo_pass'] = 'password'
 default['cassandra']['dse']['rhel_repo_url'] = "http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@rpm.datastax.com/enterprise"
 default['cassandra']['dse']['debian_repo_url'] = "http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@debian.datastax.com/enterprise"
+default['cassandra']['dse']['debian_repo_url_key'] = "http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@debian.datastax.com/debian/repo_key"
