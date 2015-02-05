@@ -96,3 +96,6 @@ when 'org.apache.cassandra.locator.PropertyFileSnitch'
     variables :cluster => cluster
   end
 end
+
+# metrics?
+include_recipe 'dse::metrics' if node['cassandra']['metrics_reporter']['enabled']
