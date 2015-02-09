@@ -116,7 +116,7 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node['cassandra']['metrics_reporter']['jar_url']` (default: `http://search.maven.org/remotecontent?filepath=com/yammer/metrics/metrics-graphite/2.2.0/metrics-graphite-2.2.0.jar`): where the jar is
  * `node['cassandra']['metrics_reporter']['sha256sum']` (default: `6b4042aabf532229f8678b8dcd34e2215d94a683270898c162175b1b13d87de4`): checksum of the jar
  * `node['cassandra']['metrics_reporter']['jar_name']` (default: `metrics-graphite-2.2.0.jar`): full name of the jar
- * `node['cassandra']['metrics_reporter']['config']` (default: `nil`): hash of the conf to use, example below:
+ * `node['cassandra']['metrics_reporter']['config']` (default: `{}`): hash of the conf to use, example below:
 
 ```
 node.default['cassandra']['metrics_reporter'] = {
