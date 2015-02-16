@@ -261,6 +261,11 @@ JVM_OPTS="$JVM_OPTS -Dcom.sun.management.jmxremote.port=$JMX_PORT"
 JVM_OPTS="$JVM_OPTS -Dcom.sun.management.jmxremote.ssl=false"
 JVM_OPTS="$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
 
+# Metrics reporter support
+<% if node['cassandra']['metrics_reporter']['enabled'] %>
+JVM_OPTS="$JVM_OPTS -Dcassandra.metricsReporterConfigFile=cassandra-metrics.yaml"
+<% end %>
+
 # enable the old dse state model by default. After the upgrade is done
 # or after a fresh install, please comment this line out
 #JVM_OPTS="$JVM_OPTS -Denable-old-dse-state=true"

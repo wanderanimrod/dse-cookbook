@@ -110,6 +110,42 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["audit_dir"]` (default: `/var/log/cassandra`): the directory to put audit logs in
  * `node["cassandra"]["active_categories"]` (default: `ADMIN,AUTH,DDL,DCL`): the categories to audit on
 
+#### metrics settings
+ * `node['cassandra']['metrics_reporter']['enabled']` (default: `false`): enable or disable the metrics reporter jar
+ * `node['cassandra']['metrics_reporter']['name']` (default: `metrics-graphite`): the name of the jar to use, graphite is a popular one 
+ * `node['cassandra']['metrics_reporter']['jar_url']` (default: `http://search.maven.org/remotecontent?filepath=com/yammer/metrics/metrics-graphite/2.2.0/metrics-graphite-2.2.0.jar`): where the jar is
+ * `node['cassandra']['metrics_reporter']['sha256sum']` (default: `6b4042aabf532229f8678b8dcd34e2215d94a683270898c162175b1b13d87de4`): checksum of the jar
+ * `node['cassandra']['metrics_reporter']['jar_name']` (default: `metrics-graphite-2.2.0.jar`): full name of the jar
+ * `node['cassandra']['metrics_reporter']['config']` (default: `{}`): hash of the conf to use, example below:
+
+```
+node.default['cassandra']['metrics_reporter'] = {
+    'enabled' => true,
+    'name' => 'metrics-graphite',
+    'jar_url' => 'http://search.maven.org/remotecontent?filepath=com/yammer/metrics/metrics-graphite/2.2.0/metrics-graphite-2.2.0.jar',
+    'sha256sum' => '6b4042aabf532229f8678b8dcd34e2215d94a683270898c162175b1b13d87de4',
+    'jar_name' => 'metrics-graphite-2.2.0.jar',
+    'config' => {
+      'graphite' => [{
+        'timeunit' => 'SECONDS',
+        'hosts' => [{
+          'host' => 'graphite.host.com',
+          'port' => 2003
+        }],
+        'prefix' => "servers.#{node.name}.cassandra",
+        'period' => 60,
+        'predicate' => {
+          'color' => 'white',
+          'useQualifiedName' => true,
+          'patterns' => [
+            '^org.apache.cassandra.metrics.Cache.+',
+          ]
+        }
+      }]
+    }
+  }
+```
+
 ### dse.rb
  * `node["cassandra"]["dse"]["delegated_snitch"]` (default: `org.apache.cassandra.locator.SimpleSnitch`): the snitch to use for dse
  * `node["cassandra"]["dse"]["snitch"]` (default: `com.datastax.bdp.snitch.DseDelegateSnitch`): the snitch to use in dse.yaml
