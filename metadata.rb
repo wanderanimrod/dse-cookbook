@@ -13,5 +13,6 @@ end
 supports 'ubuntu', '= 14.04'
 
 depends 'java', '~> 1.14'
-depends 'yum', '~> 2.3'
+depends 'yum', '~> 3.5'
+depends 'yum-epel', '~> 0.6'
 depends 'apt', '~> 2.0'

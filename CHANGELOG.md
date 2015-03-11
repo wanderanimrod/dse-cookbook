@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the dse cookbook.
 
+## 3.0.16
+* adding metrics library 
+
+## 3.0.15
+* update to latest yum version 
+
 ## 3.0.14
 * restart the datastax-agent on new version 
 

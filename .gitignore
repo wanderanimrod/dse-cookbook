@@ -5,5 +5,7 @@
 *.class
 .kitchen/
 Gemfile.lock
+Berksfile.lock
 .vagrant/
 Vagrantfile
+.kitchen.local.yml
