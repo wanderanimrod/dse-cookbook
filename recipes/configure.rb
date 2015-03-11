@@ -11,7 +11,6 @@ template '/etc/default/dse' do
   source "dse/dse_#{node['cassandra']['dse_version']}.erb"
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
 # set up log 4j temlate (audit logs, etc)
@@ -19,7 +18,6 @@ template "#{node['cassandra']['audit_dir']}/log4j-server.properties" do
   source 'log4j-server.properties.erb'
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
 # set up the dse.yaml template for dse
@@ -27,7 +25,6 @@ template "#{node['cassandra']['dse']['conf_dir']}/dse.yaml" do
   source "dse_yaml/dse_#{node['cassandra']['dse_version']}.yaml.erb"
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
 if node['cassandra']['role_based_seeds']
@@ -54,7 +51,6 @@ template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra.yaml" do
   )
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
 # set up the cassandra-env.sh template (this contains java heap settings)
@@ -62,7 +58,6 @@ template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-env.sh" do
   source 'cassandra-env.sh.erb'
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
 end
 
 # check what kind of snitch is set, since it requires different templates.
@@ -73,7 +68,6 @@ when 'org.apache.cassandra.locator.GossipingPropertyFileSnitch'
     source 'cassandra-rackdc.properties.erb'
     owner node['cassandra']['user']
     group node['cassandra']['group']
-    notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
   end
 when 'org.apache.cassandra.locator.PropertyFileSnitch'
   # This requires a variable of cluster to be created.
@@ -90,7 +84,6 @@ when 'org.apache.cassandra.locator.PropertyFileSnitch'
   # Set up the topology sript
   template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-topology.properties" do
     source 'cassandra-topology.properties.erb'
-    notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
     owner node['cassandra']['user']
     group node['cassandra']['group']
     variables :cluster => cluster
