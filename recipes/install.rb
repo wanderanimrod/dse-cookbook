@@ -1,7 +1,7 @@
 # This recipe sets up the yum repos, directories, tuning settings, and installs the dse package.
 # Install java
-include_recipe 'java' if node['dse']['manage_java']
 include_recipe 'dse::_repo'
+include_recipe 'java' if node['dse']['manage_java']
 
 # Check for existing dse version and the version chef wants
 # This will stop DSE before doing an upgrade (if we let chef do the upgrade)
