@@ -7,7 +7,7 @@ RSpec.configure do |config|
 end
 
 describe 'dse::opscenter' do
-  let(:chef_run) { ChefSpec::ServerRunner.converge(described_recipe) }
+  cached(:chef_run) { ChefSpec::ServerRunner.converge(described_recipe) }
 
   it 'includes the _repo recipe to setup the local package repositories' do
     expect(chef_run).to include_recipe('dse::_repo')

@@ -7,7 +7,7 @@ RSpec.configure do |config|
 end
 
 describe 'The dse::hadoop cookbook' do
-  let(:chef_run) { ChefSpec::ServerRunner.converge('dse::hadoop') }
+  cached(:chef_run) { ChefSpec::ServerRunner.converge('dse::hadoop') }
 
   it 'includes the default recipe' do
     expect(chef_run).to include_recipe('dse::default')

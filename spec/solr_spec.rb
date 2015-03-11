@@ -7,7 +7,7 @@ RSpec.configure do |config|
 end
 
 describe 'The dse::solr cookbook' do
-  let(:chef_run) { ChefSpec::ServerRunner.converge('dse::solr') }
+  cached(:chef_run) { ChefSpec::ServerRunner.converge('dse::solr') }
 
   it 'includes the default recipe' do
     expect(chef_run).to include_recipe('dse::default')
