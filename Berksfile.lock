@@ -5,7 +5,7 @@ DEPENDENCIES
 
 GRAPH
   apt (2.6.1)
-  dse (3.0.15)
+  dse (3.0.16)
     apt (~> 2.0)
     java (~> 1.14)
     yum (~> 2.3)
