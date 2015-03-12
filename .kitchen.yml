@@ -9,7 +9,7 @@ platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
   - name: centos-6.6
-  - name: centos-7.0
+#  - name: centos-7.0 # need update to support systemd service
   - name: debian-6.0.10
   - name: debian-7.8
   # planned for future tested support
