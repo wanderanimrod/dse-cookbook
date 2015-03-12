@@ -7,7 +7,7 @@ RSpec.configure do |config|
 end
 
 describe 'dse with default settings' do
-  let(:chef_run) { ChefSpec::ServerRunner.converge('dse::default') }
+  cached(:chef_run) { ChefSpec::ServerRunner.converge('dse::default') }
 
   it 'creates the cassandra data directory /data/cassandra' do
     expect(chef_run).to create_directory('/data/cassandra').with(
@@ -35,7 +35,7 @@ describe 'dse with default settings' do
     expect(chef_run).to add_apt_repository('datastax').with(
       uri: 'http://user:password@debian.datastax.com/enterprise',
       distribution: 'stable',
-      key: 'http://debian.datastax.com/debian/repo_key'
+      key: 'http://user:password@debian.datastax.com/debian/repo_key'
     )
   end
 
@@ -54,7 +54,7 @@ describe 'dse with default settings' do
     expect(chef_run).to install_package('dse-libpig')
     expect(chef_run).to install_package('dse-libtomcat')
     expect(chef_run).to install_package('dse-libsolr')
-    expect(chef_run).to install_package('dse-libspark')
+    # expect(chef_run).to install_package('dse-libspark') # default 4.0.1 doesn't support spark
     expect(chef_run).to install_package('dse-libsqoop')
     expect(chef_run).to install_package('dse-pig')
     expect(chef_run).to install_package('dse-demos')
@@ -124,10 +124,14 @@ describe 'dse with default settings' do
 end
 
 describe 'dse with node[\'datastax-agent\'][\'enabled\'] true' do
-  let(:chef_run) do
+  cached(:chef_run) do
     ChefSpec::ServerRunner.new do |node|
       node.set['datastax-agent']['enabled'] = true
     end.converge('dse')
+  end
+
+  it 'installs the sysstat package' do
+    expect(chef_run).to install_package('sysstat')
   end
 
   it 'installs the datastax-agent package' do
@@ -144,7 +148,7 @@ describe 'dse with node[\'datastax-agent\'][\'enabled\'] true' do
 end
 
 describe 'dse with node[\'cassandra\'][\'dse\'][\'internode_encryption\'] set to "all"' do
-  let(:chef_run) do
+  cached(:chef_run) do
     ChefSpec::ServerRunner.new do |node|
       node.set['cassandra']['dse']['internode_encryption'] = 'all'
     end.converge('dse')

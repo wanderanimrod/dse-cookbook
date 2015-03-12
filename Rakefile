@@ -1,19 +1,20 @@
 #!/usr/bin/env rake
 
+#
+# Berkshelf
+#
+desc 'Install berkshelf cookbooks locally'
+task :berkshelf do
+  system('berks install')
+end
+
 # Style tests. Rubocop and Foodcritic
 namespace :style do
-  begin
-    require 'rubocop/rake_task'
-    desc 'Run Ruby style checks'
-    RuboCop::RakeTask.new(:ruby)
-  rescue LoadError
-    puts '>>>>> Rubocop gem not loaded, omitting tasks' unless ENV['CI']
-  end
-
   begin
     require 'foodcritic'
 
     desc 'Run Chef style checks'
+    puts 'Running Foodcritic...'
     FoodCritic::Rake::LintTask.new(:chef) do |t|
       t.options = {
         fail_tags: ['any']
@@ -21,6 +22,14 @@ namespace :style do
     end
   rescue LoadError
     puts '>>>>> foodcritic gem not loaded, omitting tasks' unless ENV['CI']
+  end
+
+  begin
+    require 'rubocop/rake_task'
+    desc 'Run Ruby style checks'
+    RuboCop::RakeTask.new(:ruby)
+  rescue LoadError
+    puts '>>>>> Rubocop gem not loaded, omitting tasks' unless ENV['CI']
   end
 end
 
@@ -53,7 +62,7 @@ namespace :integration do
 end
 
 desc 'Run all tests on Travis'
-task travis: ['style', 'unit']
+task travis: %w(style unit)
 
 # Default
 # task default: ['unit', 'style', 'integration:kitchen:all']

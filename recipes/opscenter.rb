@@ -23,6 +23,14 @@ package 'opscenter' do
   action :install
 end
 
+template '/etc/opscenter/opscenterd.conf' do
+  source 'opscenterd.conf.erb'
+  mode '644'
+  owner 'root'
+  group 'root'
+end
+
 service 'opscenterd' do
   action [:enable, :start]
+  pattern 'start_opscenter.py'
 end
