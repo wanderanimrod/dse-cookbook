@@ -1,27 +1,7 @@
 # This recipe sets up the yum repos, directories, tuning settings, and installs the dse package.
 # Install java
-include_recipe 'java' if node['dse']['manage_java']
 include_recipe 'dse::_repo'
-
-# create the data directories for Cassandra
-node['cassandra']['data_dir'].each do |dir|
-  directory dir do
-    owner node['cassandra']['user']
-    group node['cassandra']['group']
-    mode '775'
-    recursive true
-    action :create
-  end
-end
-
-# Make sure the commit directory exists (in case we changed it from default)
-directory node['cassandra']['commit_dir'] do
-  owner node['cassandra']['user']
-  group node['cassandra']['group']
-  mode '755'
-  recursive true
-  action :create
-end
+include_recipe 'java' if node['dse']['manage_java']
 
 # Check for existing dse version and the version chef wants
 # This will stop DSE before doing an upgrade (if we let chef do the upgrade)
@@ -34,6 +14,7 @@ if File.exist?('/usr/bin/dse')
   unless Chef::VersionConstraint.new("= #{node['cassandra']['dse_version'].split('-')[0]}").include?(dse_version)
     execute 'nodetool drain' do
       timeout 30
+      only_if '/etc/init.d/dse status'
     end
 
     service node['cassandra']['dse']['service_name'] do
@@ -58,6 +39,26 @@ when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
     version node['cassandra']['dse_version']
     action :install
   end
+end
+
+# create the data directories for Cassandra
+node['cassandra']['data_dir'].each do |dir|
+  directory dir do
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+    mode '775'
+    recursive true
+    action :create
+  end
+end
+
+# Make sure the commit directory exists (in case we changed it from default)
+directory node['cassandra']['commit_dir'] do
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+  mode '755'
+  recursive true
+  action :create
 end
 
 # do you want the datastax-agent for opscenter?

@@ -205,8 +205,18 @@ These attributes are used to conigure the datastax-agent. This is used with Data
 
 Datastax recommends to use the Oracle jdk version. You can do this by setting an attribute in your environment or run list.
 
-Currently, Oracle prevents you from downloading the package from their website, put it in Artifactory or something as a workaround.
-You can override the java url with an attribute, show below.
+## Kitchen Testing
+The integration test environment consists of :
+
+* Chef-DK 0.4.0
+* VirtualBox 4.3.24
+* Vagrant 1.7.2
+ * vagrant-omnibus
+ * vagrant-berkshelf
+ * vagrant-share
+ * vagrant-login
+
+Edit the .kitchen.yml file in the root of the cookbook and set your Datastax repository username and password in order to run the tests.  Run 'rake' in the root of the cookbook to test the full automated testing suite.
 
 ## Copyright & License
 

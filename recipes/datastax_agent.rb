@@ -1,4 +1,6 @@
 # Install the datastax-agent package
+package 'sysstat'
+
 package 'datastax-agent' do
   version node['datastax-agent']['version']
   action :install
@@ -13,5 +15,5 @@ end
 
 # Restart the agent
 service 'datastax-agent' do
-  action :start
+  action [:enable, :start]
 end

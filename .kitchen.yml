@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  customize:
-    memory: 2048
 
 provisioner:
   name: chef_zero
@@ -10,21 +8,31 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
-#  - name: centos-6.5
   - name: centos-6.6
-
+#  - name: centos-7.0 # need update to support systemd service
+  - name: debian-6.0.10
+  - name: debian-7.8
+  # planned for future tested support
+  # - name: fedora-20
+  # - name: fedora-21
+  # - name: opensuse-13.1
 
 suites:
   - name: default
+    driver:
+      customize:
+        memory: 2048
     run_list:
-      - recipe[dse::cassandra]
+      - recipe[dse]
     attributes:
      java:
        oracle:
          accept_oracle_download_terms: true
      cassandra:
-      seeds: "127.0.0.1"
       memtable_total_space_in_mb: 2048
       memtable_flush_writers: 18
-      max_heap_size: "1G"
-      heap_newsize: "200M"
+      max_heap_size: '1G'
+      heap_newsize: '200M'
+      dse:
+        # repo_user: 'your_username'
+        # repo_pass: 'your_password'

@@ -7,7 +7,7 @@ when 'ubuntu', 'debian'
     uri node['cassandra']['dse']['debian_repo_url']
     distribution 'stable'
     components ['main']
-    key 'http://debian.datastax.com/debian/repo_key'
+    key node['cassandra']['dse']['debian_repo_url_key']
     action :add
   end
 when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
