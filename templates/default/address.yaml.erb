@@ -1,1 +1,7 @@
 stomp_interface: "<%= node['datastax-agent']['opscenter-ip'] %>"
+<% if node["datastax-agent"]["hosts"] %>
+hosts: <%= node["datastax-agent"]["hosts"] %>
+<% end %>
+<% if node["datastax-agent"]["local_interface"] %>
+local_interface: "<%= node["datastax-agent"]["local_interface"] %>"
+<% end %>
