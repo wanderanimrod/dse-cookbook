@@ -35,3 +35,9 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 # reporting, set to 0
 # interval = 86400 # 24 hours
 <%= "interval = #{node['opscenter']['stat_reporter_interval']}" if node['opscenter']['stat_reporter_interval'] -%>
+
+
+<% if node["opscenter"]["use_longpoll"] %>
+[labs]
+orbited_longpoll = true
+<% end %>
