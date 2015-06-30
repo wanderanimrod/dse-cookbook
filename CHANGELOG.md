@@ -2,30 +2,33 @@
 
 This file is used to list changes made in each version of the dse cookbook.
 
+## 3.0.19
+* added support for overriding additional attributes in log4j-server.properties
+
 ## 3.0.16
-* adding metrics library 
+* adding metrics library
 
 ## 3.0.15
-* update to latest yum version 
+* update to latest yum version
 
 ## 3.0.14
-* restart the datastax-agent on new version 
+* restart the datastax-agent on new version
 
 ## 3.0.13
-* added support to set MaxTenuringThreshold in cassandra-env 
+* added support to set MaxTenuringThreshold in cassandra-env
 
 ## 3.0.12
 * refactored some version checks
 * added role based seed assignment
 
 ## 3.0.11
-* add templates and upgrade to 4.5.2 
+* add templates and upgrade to 4.5.2
 
 ## 3.0.10
-* add templates and upgrade to 4.0.4 
+* add templates and upgrade to 4.0.4
 
 ## 3.0.9
-* remove the ssd tuning from this recipe 
+* remove the ssd tuning from this recipe
 
 ## 3.0.8
 * minor updates
@@ -58,7 +61,7 @@ This file is used to list changes made in each version of the dse cookbook.
 
 ## 3.0.0
 
-* First pass of node-to-node ssl 
+* First pass of node-to-node ssl
 * Adding another hadoop attribute
 * fixing hadoop map reduce dir, as hadoop didnt create
 * adding changes to ssl
