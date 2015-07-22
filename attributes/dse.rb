@@ -1,5 +1,4 @@
-default['cassandra']['dse']['delegated_snitch'] = 'org.apache.cassandra.locator.SimpleSnitch'
-default['cassandra']['dse']['snitch']           = 'com.datastax.bdp.snitch.DseDelegateSnitch'
+default['cassandra']['dse']['snitch']           = 'SimpleSnitch'
 default['cassandra']['dse']['service_name']     =  'dse'
 default['cassandra']['dse']['conf_dir']         = '/etc/dse'
 default['cassandra']['dse']['lib_dir']         = '/usr/share/dse/cassandra/lib'

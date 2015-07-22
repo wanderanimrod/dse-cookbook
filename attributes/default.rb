@@ -7,7 +7,7 @@ default['cassandra']['solr']		       = false
 default['cassandra']['hadoop']                 = false
 default['cassandra']['spark']                  = false
 
-default['cassandra']['dse_version']            = '4.0.4-1'
+default['cassandra']['dse_version']            = '4.7.0-1'
 # The order of this package list is important to be able to install a version other than the latest
 default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libhadoop',
@@ -26,7 +26,7 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-full'
                                                  ]
 unless node['cassandra']['dse_version'].match(/4\.0.*/)
-  default['cassandra']['packages'] = ['dse-libspark']
+  default['cassandra']['packages'] << 'dse-libspark'
 end
 
 default['cassandra']['user']                   = 'cassandra'
