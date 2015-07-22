@@ -26,7 +26,7 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-full'
                                                  ]
 unless node['cassandra']['dse_version'].match(/4\.0.*/)
-  default['cassandra']['packages'] = ['dse-libspark']
+  default['cassandra']['packages'] << 'dse-libspark'
 end
 
 default['cassandra']['user']                   = 'cassandra'
