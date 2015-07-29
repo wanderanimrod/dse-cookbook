@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the dse cookbook.
 
+## 3.0.21
+* make the jamm jar a variable in cassandra-env.sh
+
+## 3.0.20
+* adding support for dse 4.7.0
+* fix package install on ubuntu
+
 ## 3.0.19
 * added support for overriding additional attributes in log4j-server.properties
 
