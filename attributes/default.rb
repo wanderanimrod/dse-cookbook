@@ -7,7 +7,8 @@ default['cassandra']['solr']		       = false
 default['cassandra']['hadoop']                 = false
 default['cassandra']['spark']                  = false
 
-default['cassandra']['dse_version']            = '4.0.4-1'
+default['cassandra']['dse_version']            = '4.7.2-1'
+default['cassandra']['jamm_version']           = '0.3.0'
 # The order of this package list is important to be able to install a version other than the latest
 default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libhadoop',
@@ -26,7 +27,7 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-full'
                                                  ]
 unless node['cassandra']['dse_version'].match(/4\.0.*/)
-  default['cassandra']['packages'] = ['dse-libspark']
+  default['cassandra']['packages'] << 'dse-libspark'
 end
 
 default['cassandra']['user']                   = 'cassandra'
@@ -47,7 +48,13 @@ default['cassandra']['compaction_thruput']     = 16
 default['cassandra']['multithreaded_compaction'] = false
 default['cassandra']['in_memory_compaction_limit'] = 64
 default['cassandra']['trickle_fsync']		= false
-default['cassandra']['range_request_timeout_in_ms'] = '10000'
+default['cassandra']['range_request_timeout_in_ms'] = 10_000
+default['cassandra']['read_request_timeout_in_ms']  = 5000
+default['cassandra']['write_request_timeout_in_ms'] = 2000
+default['cassandra']['counter_request_timeout_in_ms'] = 5000
+default['cassandra']['cas_retention_request_timeout_in_ms'] = 5000
+default['cassandra']['truncate_request_timeout_in_ms'] = 60_000
+default['cassandra']['request_timeout_in_ms'] = 10_000
 default['cassandra']['thrift_framed_transport_size_in_mb'] = '15'
 default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']   = nil

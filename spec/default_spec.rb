@@ -54,7 +54,7 @@ describe 'dse with default settings' do
     expect(chef_run).to install_package('dse-libpig')
     expect(chef_run).to install_package('dse-libtomcat')
     expect(chef_run).to install_package('dse-libsolr')
-    # expect(chef_run).to install_package('dse-libspark') # default 4.0.1 doesn't support spark
+    expect(chef_run).to install_package('dse-libspark') # default 4.0.1 doesn't support spark
     expect(chef_run).to install_package('dse-libsqoop')
     expect(chef_run).to install_package('dse-pig')
     expect(chef_run).to install_package('dse-demos')
@@ -70,7 +70,7 @@ describe 'dse with default settings' do
 
   it 'creates the template /etc/default/dse' do
     expect(chef_run).to create_template('/etc/default/dse').with(
-      source: 'dse/dse_4.0.4-1.erb',
+      source: 'dse/dse_4.7.2-1.erb',
       owner: 'cassandra',
       group: 'cassandra'
     )
@@ -90,7 +90,7 @@ describe 'dse with default settings' do
 
   it 'creates the template /etc/dse/dse.yaml' do
     expect(chef_run).to create_template('/etc/dse/dse.yaml').with(
-      source: 'dse_yaml/dse_4.0.4-1.yaml.erb',
+      source: 'dse_yaml/dse_4.7.2-1.yaml.erb',
       owner: 'cassandra',
       group: 'cassandra'
     )
@@ -100,7 +100,7 @@ describe 'dse with default settings' do
 
   it 'creates the template /etc/dse/cassandra/cassandra.yaml' do
     expect(chef_run).to create_template('/etc/dse/cassandra/cassandra.yaml').with(
-      source: 'cassandra_yaml/cassandra_4.0.4-1.yaml.erb',
+      source: 'cassandra_yaml/cassandra_4.7.2-1.yaml.erb',
       owner: 'cassandra',
       group: 'cassandra'
     )
