@@ -45,6 +45,7 @@ default['cassandra']['seeds']                  = node['ipaddress']
 default['cassandra']['concurrent_reads']       = 32
 default['cassandra']['concurrent_writes']      = 32
 default['cassandra']['compaction_thruput']     = 16
+default['cassandra']['compaction_large_partition_warning_threshold_mb'] = 100
 default['cassandra']['multithreaded_compaction'] = false
 default['cassandra']['in_memory_compaction_limit'] = 64
 default['cassandra']['trickle_fsync']		= false
