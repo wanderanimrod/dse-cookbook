@@ -33,7 +33,6 @@ end
 
 default['cassandra']['packages'] << 'dse-full'
 
-
 default['cassandra']['user']                   = 'cassandra'
 default['cassandra']['group']                  = 'cassandra'
 
