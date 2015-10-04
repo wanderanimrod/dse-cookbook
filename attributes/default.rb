@@ -9,6 +9,7 @@ default['cassandra']['spark']                  = false
 
 default['cassandra']['dse_version']            = '4.7.2-1'
 default['cassandra']['jamm_version']           = '0.3.0'
+
 # The order of this package list is important to be able to install a version other than the latest
 default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libhadoop',
@@ -23,12 +24,14 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libsolr',
                                                   'dse-libsqoop',
                                                   'dse-pig',
-                                                  'dse-demos',
-                                                  'dse-full'
+                                                  'dse-demos'
                                                  ]
+
 unless node['cassandra']['dse_version'].match(/4\.0.*/)
   default['cassandra']['packages'] << 'dse-libspark'
 end
+
+default['cassandra']['packages'] << 'dse-full'
 
 default['cassandra']['user']                   = 'cassandra'
 default['cassandra']['group']                  = 'cassandra'
@@ -45,6 +48,7 @@ default['cassandra']['seeds']                  = node['ipaddress']
 default['cassandra']['concurrent_reads']       = 32
 default['cassandra']['concurrent_writes']      = 32
 default['cassandra']['compaction_thruput']     = 16
+default['cassandra']['compaction_large_partition_warning_threshold_mb'] = 100
 default['cassandra']['multithreaded_compaction'] = false
 default['cassandra']['in_memory_compaction_limit'] = 64
 default['cassandra']['trickle_fsync']		= false

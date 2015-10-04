@@ -10,6 +10,9 @@ end
 # Set up the stomp IP (the IP of Opscenter)
 template "#{node['datastax-agent']['conf_dir']}/address.yaml" do
   source 'address.yaml.erb'
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+
   notifies :restart, 'service[datastax-agent]'
 end
 
