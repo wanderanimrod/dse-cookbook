@@ -61,15 +61,16 @@ template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-env.sh" do
 end
 
 # check what kind of snitch is set, since it requires different templates.
-case node['cassandra']['dse']['delegated_snitch']
+snitch = (node['cassandra']['dse']['delegated_snitch'] || node['cassandra']['dse']['snitch']).split('.').last
+case snitch
 # GossipingPropertyFile
-when 'org.apache.cassandra.locator.GossipingPropertyFileSnitch'
+when 'GossipingPropertyFileSnitch', 'Ec2Snitch', 'Ec2MultiRegionSnitch'
   template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-rackdc.properties" do
     source 'cassandra-rackdc.properties.erb'
     owner node['cassandra']['user']
     group node['cassandra']['group']
   end
-when 'org.apache.cassandra.locator.PropertyFileSnitch'
+when 'PropertyFileSnitch'
   # This requires a variable of cluster to be created.
   # This has been mostly deprecated in the use of this cookbook, but should still work.
   # Requires a chef search or some type of variable so every node knows every other node's datacenter and IP

@@ -27,4 +27,8 @@ rack=RAC1
 
 # Add a suffix to a datacenter name. Used by the Ec2Snitch and Ec2MultiRegionSnitch
 # to append a string to the EC2 region name.
+<% if node['cassandra']['dse']['snitch'].split('.').last.start_with?('Ec2') %>
+dc_suffix=_<%= node['datacenter'] %>
+<% else %>
 #dc_suffix=
+<% end %>
