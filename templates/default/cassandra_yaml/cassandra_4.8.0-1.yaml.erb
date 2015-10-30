@@ -9,7 +9,7 @@
 # one logical cluster from joining another.
 cluster_name: '<%= node[:cassandra][:cluster_name] %>' #'Test Cluster'
 
-auto_bootstrap: <%= (node[:cassandra][:auto_bootstrap] || true).to_s %>
+auto_bootstrap: <% node[:cassandra][:auto_bootstrap].to_s != 'false' %>
 
 # This defines the number of tokens randomly assigned to this node on the ring
 # The more tokens, relative to other nodes, the larger the proportion of data
