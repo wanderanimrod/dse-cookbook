@@ -28,6 +28,13 @@ case node['platform']
 # make sure not to overwrite any conf files on upgrade
 when 'ubuntu', 'debian'
   node['cassandra']['packages'].each do |install|
+    # We need to install datastax-agent upfront because dse package has it as an
+    # open dependency and therefore the specified datastax-agent version may not
+    # be fulfilled.
+    package 'datastax-agent' do
+      version node['datastax-agent']['version']
+      action :install
+    end
     package install do
       version node['cassandra']['dse_version']
       action :install
