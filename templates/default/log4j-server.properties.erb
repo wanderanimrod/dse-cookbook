@@ -60,7 +60,7 @@ log4j.appender.stderr.layout=org.apache.log4j.PatternLayout
 log4j.appender.stderr.layout.ConversionPattern=%5p %d{HH:mm:ss,SSS} %m%n
 
 # audit log
-<% if node['cassandra']['audit_logging'] %>
+<% if node['cassandra']['dse']['audit_logging_options']['enabled'] %>
 log4j.logger.DataAudit=<%= node['cassandra']['log_level'] %>, A
 log4j.additivity.DataAudit=false
 log4j.appender.A=org.apache.log4j.RollingFileAppender
@@ -71,7 +71,7 @@ log4j.appender.A.maxBackupIndex=5
 log4j.appender.A.layout=org.apache.log4j.PatternLayout
 log4j.appender.A.layout.ConversionPattern=%m%n
 log4j.appender.A.filter.1=com.datastax.bdp.cassandra.audit.AuditLogFilter
-log4j.appender.A.filter.1.ActiveCategories=<%= node['cassandra']['active_categories'] %>
+log4j.appender.A.filter.1.ActiveCategories=<%= node['cassandra']['dse']['audit_logging_options']['included_categories'] %>
 log4j.appender.A.filter.1.ExemptKeyspaces=do_not_log
 <% else %>
 #log4j.logger.DataAudit=<%= node['cassandra']['log_level'] %>, A
