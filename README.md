@@ -106,9 +106,22 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
 
 #### audit logs
  * `node["cassandra"]["log_level"]` (default: `INFO`): the log level for cassandra (or solr/hadoop)
- * `node["cassandra"]["audit_logging"]` (default: `false`): turn on audit logging
- * `node["cassandra"]["audit_dir"]` (default: `/var/log/cassandra`): the directory to put audit logs in
- * `node["cassandra"]["active_categories"]` (default: `ADMIN,AUTH,DDL,DCL`): the categories to audit on
+ * `node["cassandra"]["audit_logging"]` deprecated - see: `node['cassandra']['dse']['audit_logging_options']['enabled']`
+ * `node["cassandra"]["audit_dir"]` (default: `/etc/dse/cassandra`): the directory of log4j-server.properties file
+ * `node["cassandra"]["active_categories"]` deprecated - see: `node['cassandra']['dse']['audit_logging_options']['included_categories']`
+ * `node['cassandra']['dse']['audit_logging_options']['enabled']` (default: `false`): turn on audit logging
+ * `node['cassandra']['dse']['audit_logging_options']['logger']` (default: `SLF4JAuditWriter`): the audit writer
+ * `node['cassandra']['dse']['audit_logging_options']['included_categories']` (default: `ADMIN,AUTH,DDL,DCL`): the categories to include in audit
+ * `node['cassandra']['dse']['audit_logging_options']['excluded_categories']` (default: `''`): the categories to exclude from audit
+ * `node['cassandra']['dse']['audit_logging_options']['included_keyspaces']` (default: `''`): the keyspaces to exclude from audit
+ * `node['cassandra']['dse']['audit_logging_options']['excluded_keyspaces']` (default: `''`): the keyspaces to exclude from audit
+ * `node['cassandra']['dse']['audit_logging_options']['retention_time']` (default: `0`): the hours audit events are retained by supporting loggers
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['mode']` (default: `sync`): the mode the writer runs in
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['batch_size']` (default: `50`): the maxium number of events the writer dequeues before writing to table
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['flush_time']` (default: `500`): the maximum milliseconds an event will be dequeued by a writer before writing to table
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['num_writers']` (default: `10`): the number of asynchronous threads logging events to the CassandraAuditWriter
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['queue_size']` (default: `10000`): the queue size feeding the asynchronous audit log threads.
+ * `node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['write_consistency']` (default: `QUORUM`): the audit write consistency level
 
 #### metrics settings
  * `node['cassandra']['metrics_reporter']['enabled']` (default: `false`): enable or disable the metrics reporter jar
