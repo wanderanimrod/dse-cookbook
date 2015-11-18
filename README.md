@@ -159,6 +159,49 @@ node.default['cassandra']['metrics_reporter'] = {
   }
 ```
 
+#### ldap settings
+ * `node['cassandra']['dse']['ldap_options']['server_host']` (default: `nil`): the host name of the LDAP server
+ * `node['cassandra']['dse']['ldap_options']['server_port']` (default: `nil`): the port on which the LDAP server listens.
+ * `node['cassandra']['dse']['ldap_options']['search_dn']` (default: `nil`): the user that is used to search for other users on the LDAP server
+ * `node['cassandra']['dse']['ldap_options']['search_password']` (default: `nil`): the password of the search_dn user
+ * `node['cassandra']['dse']['ldap_options']['use_ssl']` (default: `nil`): enables SSL connections to the LDAP server
+ * `node['cassandra']['dse']['ldap_options']['use_tls']` (default: `nil`): enables TLS connections to the LDAP server
+ * `node['cassandra']['dse']['ldap_options']['truststore_path']` (default: `nil`): the path to the trust store for SSL certificates
+ * `node['cassandra']['dse']['ldap_options']['truststore_password']` (default: `nil`): the password to access the trust store
+ * `node['cassandra']['dse']['ldap_options']['truststore_type']` (default: `nil`): the type of trust store
+ * `node['cassandra']['dse']['ldap_options']['user_search_base']` (default: `nil`): the search base for your domain, used to look up users
+ * `node['cassandra']['dse']['ldap_options']['user_search_filter']` (default: `nil`): the search filter for looking up user names
+ * `node['cassandra']['dse']['ldap_options']['credentials_validity_in_ms']` (default: `nil`): the duration period for the credential cache
+ * `node['cassandra']['dse']['ldap_options']['search_validity_in_seconds']` (default: `nil`): the duration period for the search cache
+ * `node['cassandra']['dse']['ldap_options']['connection_pool']['max_active']` (default: `nil`): the maximum number of active connections to the LDAP server
+ * `node['cassandra']['dse']['ldap_options']['connection_pool']['max_idle']` (default: `nil`): the maximum number of idle connections in the pool awaiting requests
+
+#### ldap settings (opscenter)
+ * `node['opscenter']['authentication_method']` (default: `DatastaxEnterpriseAuth`): the authentication method for Opscenter (can be set to `LDAP`)
+ * `node['opscenter']['ldap']['server_host']` (default: `nil`): the LDAP server host
+ * `node['opscenter']['ldap']['server_port']` (default: `nil`): the LDAP server port
+ * `node['opscenter']['ldap']['uri_scheme']` (default: `nil`): the URI Scheme (ldap vs ldaps)
+ * `node['opscenter']['ldap']['search_dn']` (default: `nil`): the user that should be used to search for users on the LDAP server
+ * `node['opscenter']['ldap']['search_password']` (default: `nil`): the password of the search user
+ * `node['opscenter']['ldap']['user_search_base']` (default: `nil`): the ldap search base used to find a user
+ * `node['opscenter']['ldap']['user_search_filter']` (default: `nil`): the ldap search filter used to uniquely identify a user
+ * `node['opscenter']['ldap']['group_search_base']` (default: `nil`): the ldap search base used to find a group
+ * `node['opscenter']['ldap']['group_search_filter']` (default: `nil`): the ldap search filter used to find a user's group (deprecated per manual)
+ * `node['opscenter']['ldap']['group_search_filter_with_dn']` (default: `nil`): the ldap search filter used to find a user's group
+ * `node['opscenter']['ldap']['group_name_attribute']` (default: `nil`): the ldap field name used to identify a group's name
+ * `node['opscenter']['ldap']['admin_group_name']` (default: `nil`): the name of the admin group or a comma-separated list of admin group names
+ * `node['opscenter']['ldap']['user_memberof_attribute']` (default: `nil`): the attribute on the user entry containing group membership
+ * `node['opscenter']['ldap']['group_search_type']` (default: `nil`): the search type used to determin groups of a user
+ * `node['opscenter']['ldap']['ssl_cacert']` (default: `nil`): the path to the CA Cert file
+ * `node['opscenter']['ldap']['ssl_cert']` (default: `nil`): the path to the cert file
+ * `node['opscenter']['ldap']['ssl_key']` (default: `nil`): the path to the Key
+ * `node['opscenter']['ldap']['tls_reqcert']` (default: `nil`): the security level for secure communication
+ * `node['opscenter']['ldap']['tls_demand']` (default: `nil`): the demand level for tls
+ * `node['opscenter']['ldap']['ldap_security']` (default: `nil`): the type of security to use (SSL vs TLS)
+ * `node['opscenter']['ldap']['connection_timeout']` (default: `nil`): the seconds before connection timeout
+ * `node['opscenter']['ldap']['opt_referrals']` (default: `nil`): the number that represents whether referrals are followed
+ * `node['opscenter']['ldap']['protocol_version']` (default: `nil`): the LDAP protocol version
+
 ### dse.rb
  * `node["cassandra"]["dse"]["delegated_snitch"]` (default: `org.apache.cassandra.locator.SimpleSnitch`): the snitch to use for dse
  * `node["cassandra"]["dse"]["snitch"]` (default: `com.datastax.bdp.snitch.DseDelegateSnitch`): the snitch to use in dse.yaml
