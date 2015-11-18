@@ -24,6 +24,7 @@ interface = <%= node['opscenter']['http_interface'] %>
 # account will be created with the username "admin" and password "admin".
 # Accounts and roles can then be created and modified from within the web UI.
 enabled = <%= node['opscenter']['auth_enabled'] %>
+<%= "True".eql?(node['opscenter']['auth_enabled']) ? "authentication_method: #{node['opscenter']['authentication_method']}" + "\n": "" -%>
 
 # To help us better understand the needs of users and to improve OpsCenter, OpsCenter
 # reports information about itself and the clusters it manages to a central DataStax
@@ -36,8 +37,34 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 # interval = 86400 # 24 hours
 <%= "interval = #{node['opscenter']['stat_reporter_interval']}" if node['opscenter']['stat_reporter_interval'] -%>
 
+<% if "LDAP".eql?(node['opscenter']['authentication_method']) -%>
+[ldap]
+<%= !node['opscenter']['ldap']['server_host'].nil? ? "server_host: #{node['opscenter']['ldap']['server_host']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['server_port'].nil? ? "server_port: #{node['opscenter']['ldap']['server_port']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['uri_scheme'].nil? ? "uri_scheme: #{node['opscenter']['ldap']['uri_scheme']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['search_dn'].nil? ? "search_dn: #{node['opscenter']['ldap']['search_dn']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['search_password'].nil? ? "search_password: #{node['opscenter']['ldap']['search_password']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['user_search_base'].nil? ? "user_search_base: #{node['opscenter']['ldap']['user_search_base']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['user_search_filter'].nil? ? "user_search_filter: #{node['opscenter']['ldap']['user_search_filter']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['group_search_base'].nil? ? "group_search_base: #{node['opscenter']['ldap']['group_search_base']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['group_search_filter'].nil? ? "group_search_filter: #{node['opscenter']['ldap']['group_search_filter']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['group_search_filter_with_dn'].nil? ? "group_search_filter_with_dn: #{node['opscenter']['ldap']['group_search_filter_with_dn']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['group_name_attribute'].nil? ? "group_name_attribute: #{node['opscenter']['ldap']['group_name_attribute']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['admin_group_name'].nil? ? "admin_group_name: #{node['opscenter']['ldap']['admin_group_name']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['user_memberof_attribute'].nil? ? "user_memberof_attribute: #{node['opscenter']['ldap']['user_memberof_attribute']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['group_search_type'].nil? ? "group_search_type: #{node['opscenter']['ldap']['group_search_type']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['ssl_cacert'].nil? ? "ssl_cacert: #{node['opscenter']['ldap']['ssl_cacert']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['ssl_cert'].nil? ? "ssl_cert: #{node['opscenter']['ldap']['ssl_cert']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['ssl_key'].nil? ? "ssl_key: #{node['opscenter']['ldap']['ssl_key']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['tls_reqcert'].nil? ? "tls_reqcert: #{node['opscenter']['ldap']['tls_reqcert']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['tls_demand'].nil? ? "tls_demand: #{node['opscenter']['ldap']['tls_demand']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['ldap_security'].nil? ? "ldap_security: #{node['opscenter']['ldap']['ldap_security']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['connection_timeout'].nil? ? "connection_timeout: #{node['opscenter']['ldap']['connection_timeout']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['opt_referrals'].nil? ? "opt_referrals: #{node['opscenter']['ldap']['opt_referrals']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['protocol_version'].nil? ? "protocol_version: #{node['opscenter']['ldap']['protocol_version']}" + "\n": "" -%>
+<% end -%>
 
-<% if node["opscenter"]["use_longpoll"] %>
+<% if node["opscenter"]["use_longpoll"] -%>
 [labs]
 orbited_longpoll = true
-<% end %>
+<% end -%>
