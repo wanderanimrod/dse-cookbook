@@ -23,3 +23,19 @@ default['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_opt
 default['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['num_writers'] = 10
 default['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['queue_size'] = 10_000
 default['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['write_consistency'] = 'QUORUM'
+
+default['cassandra']['dse']['ldap_options']['server_host'] = nil
+default['cassandra']['dse']['ldap_options']['server_port'] = nil
+default['cassandra']['dse']['ldap_options']['search_dn'] = nil
+default['cassandra']['dse']['ldap_options']['search_password'] = nil
+default['cassandra']['dse']['ldap_options']['use_ssl'] = nil
+default['cassandra']['dse']['ldap_options']['use_tls'] = nil
+default['cassandra']['dse']['ldap_options']['truststore_path'] = nil
+default['cassandra']['dse']['ldap_options']['truststore_password'] = nil
+default['cassandra']['dse']['ldap_options']['truststore_type'] = nil
+default['cassandra']['dse']['ldap_options']['user_search_base'] = nil
+default['cassandra']['dse']['ldap_options']['user_search_filter'] = nil
+default['cassandra']['dse']['ldap_options']['credentials_validity_in_ms'] = nil
+default['cassandra']['dse']['ldap_options']['search_validity_in_seconds'] = nil
+default['cassandra']['dse']['ldap_options']['connection_pool']['max_active'] = nil
+default['cassandra']['dse']['ldap_options']['connection_pool']['max_idle'] = nil

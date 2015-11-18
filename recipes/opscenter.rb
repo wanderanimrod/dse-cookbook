@@ -21,7 +21,10 @@ include_recipe 'dse::_repo'
 package 'opscenter' do
   version node['opscenter']['version']
   action :install
-  options '-o Dpkg::Options::="--force-confold"'
+  case node['platform']
+  when 'ubuntu', 'debian'
+    options '-o Dpkg::Options::="--force-confold"'
+  end
 end
 
 template '/etc/opscenter/opscenterd.conf' do
