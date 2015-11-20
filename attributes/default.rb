@@ -83,6 +83,36 @@ default['cassandra']['audit_logging']     = false
 default['cassandra']['audit_dir']         = '/etc/dse/cassandra'
 default['cassandra']['active_categories'] = 'ADMIN,AUTH,DDL,DCL'
 
+default['cassandra']['logback']['appender']['FILE']['class'] = 'ch.qos.logback.core.rolling.RollingFileAppender'
+default['cassandra']['logback']['appender']['FILE']['file'] = '${cassandra.logdir}/system.log'
+default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['class'] = 'ch.qos.logback.core.rolling.FixedWindowRollingPolicy'
+default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['fileNamePattern'] = '${cassandra.logdir}/system.log.%i.zip'
+default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['minIndex'] = '1'
+default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['maxIndex'] = '20'
+default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['maxHistory'] = ''
+default['cassandra']['logback']['appender']['FILE']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
+default['cassandra']['logback']['appender']['FILE']['triggeringPolicy']['maxFileSize'] = '20MB'
+
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['class'] = 'ch.qos.logback.core.rolling.RollingFileAppender'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['file'] = '${cassandra.logdir}/audit/audit.log'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['class'] = 'ch.qos.logback.core.rolling.FixedWindowRollingPolicy'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['fileNamePattern'] = '${cassandra.logdir}/audit/audit.log.%i.zip'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['minIndex'] = '1'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['maxIndex'] = '5'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['maxHistory'] = ''
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
+default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['triggeringPolicy']['maxFileSize'] = '200MB'
+
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['class'] = 'ch.qos.logback.core.rolling.RollingFileAppender'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['file'] = '${cassandra.logdir}/audit/dropped-events.log'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['class'] = 'ch.qos.logback.core.rolling.FixedWindowRollingPolicy'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['fileNamePattern'] = '${cassandra.logdir}/audit/dropped-events.log.%i.zip'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['minIndex'] = '1'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['maxIndex'] = '5'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['maxHistory'] = ''
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
+default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['maxFileSize'] = '200MB'
+
 # Allow pluggable metrics
 default['cassandra']['metrics_reporter']['enabled'] = false
 default['cassandra']['metrics_reporter']['name'] = 'metrics-graphite'

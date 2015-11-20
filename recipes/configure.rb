@@ -20,6 +20,13 @@ template "#{node['cassandra']['audit_dir']}/log4j-server.properties" do
   group node['cassandra']['group']
 end
 
+# set up logback temlate (audit logs, etc)
+template "#{node['cassandra']['dse']['conf_dir']}/cassandra/logback.xml" do
+  source 'logback.xml.erb'
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+end
+
 # set up the dse.yaml template for dse
 template "#{node['cassandra']['dse']['conf_dir']}/dse.yaml" do
   source "dse_yaml/dse_#{node['cassandra']['dse_version']}.yaml.erb"
