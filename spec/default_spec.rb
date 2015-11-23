@@ -88,6 +88,16 @@ describe 'dse with default settings' do
     expect(template).to notify('service[dse]').to(:restart)
   end
 
+  it 'creates the template /etc/dse/cassandra/logback.xml' do
+    expect(chef_run).to create_template('/etc/dse/cassandra/logback.xml').with(
+      source: 'logback.xml.erb',
+      owner: 'cassandra',
+      group: 'cassandra'
+    )
+    template = chef_run.template('/etc/dse/cassandra/logback.xml')
+    expect(template).to notify('service[dse]').to(:restart)
+  end
+
   it 'creates the template /etc/dse/dse.yaml' do
     expect(chef_run).to create_template('/etc/dse/dse.yaml').with(
       source: 'dse_yaml/dse_4.7.2-1.yaml.erb',

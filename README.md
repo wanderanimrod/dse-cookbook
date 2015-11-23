@@ -202,6 +202,25 @@ node.default['cassandra']['metrics_reporter'] = {
  * `node['opscenter']['ldap']['opt_referrals']` (default: `nil`): the number that represents whether referrals are followed
  * `node['opscenter']['ldap']['protocol_version']` (default: `nil`): the LDAP protocol version
 
+#### logback settings
+Please note the attributes are available for the following appenders: `FILE`, `SLF4JAuditWriterAppender`, `DroppedAuditEventAppender`.
+When the defaults are identical the appender will be replaced with `<appender name>`; otherwise the specific appender will be indicated.
+ * `node['cassandra']['logback']['appender'][<appender name>]['class']` (default: `ch.qos.logback.core.rolling.RollingFileAppender`)
+ * `node['cassandra']['logback']['appender']['FILE']['file']` (default: `${cassandra.logdir}/system.log`)
+ * `node['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['file']` (default: `${cassandra.logdir}/audit/audit.log`)
+ * `node['cassandra']['logback']['appender']['DroppedAuditEventAppender']['file']` (default: `${cassandra.logdir}/audit/dropped-events.log`)
+ * `node['cassandra']['logback']['appender'][<appender name>]['rollingPolicy']['class']` (default: `ch.qos.logback.core.rolling.FixedWindowRollingPolicy`)
+ * `node['cassandra']['logback']['appender'][<appender name>]['rollingPolicy']['fileNamePattern']` (default: `${cassandra.logdir}/system.log.%i.zip`)
+ * `node['cassandra']['logback']['appender'][<appender name>]['rollingPolicy']['minIndex']` (default: `1`)
+ * `node['cassandra']['logback']['appender']['FILE']['rollingPolicy']['maxIndex']` (default: `20`)
+ * `node['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['maxIndex']` (default: `5`)
+ * `node['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['maxIndex']` (default: `5`)
+ * `node['cassandra']['logback']['appender'][<appender name>]['rollingPolicy']['maxHistory']` (default: ``)
+ * `node['cassandra']['logback']['appender'][<appender name>]['triggeringPolicy']['class']` (default: `ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy`)
+ * `node['cassandra']['logback']['appender']['FILE']['rollingPolicy']['maxFileSize']` (default: `20MB`)
+ * `node['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['maxFileSize']` (default: `200MB`)
+ * `node['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollingPolicy']['maxFileSize']` (default: `200MB`)
+
 ### dse.rb
  * `node["cassandra"]["dse"]["delegated_snitch"]` (default: `org.apache.cassandra.locator.SimpleSnitch`): the snitch to use for dse
  * `node["cassandra"]["dse"]["snitch"]` (default: `com.datastax.bdp.snitch.DseDelegateSnitch`): the snitch to use in dse.yaml
