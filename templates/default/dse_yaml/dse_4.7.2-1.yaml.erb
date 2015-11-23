@@ -177,119 +177,119 @@ shard_transport_options:
 
 # CQL slow log settings
 cql_slow_log_options:
-    enabled: false
-    threshold_ms: 100
-    ttl_seconds: 86400
-    async_writers: 1
+    enabled: <%= node['cassandra']['dse']['cql_slow_log_options']['enabled'] %>
+    threshold_ms: <%= node['cassandra']['dse']['cql_slow_log_options']['threshold_ms'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['cql_slow_log_options']['ttl_seconds'] %>
+    async_writers: <%= node['cassandra']['dse']['cql_slow_log_options']['async_writers'] %>
 
 # CQL system info tables settings
 cql_system_info_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['cql_system_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['cql_system_info_options']['refresh_rate_ms'] %>
 
 # Data Resource latency tracking settings
 resource_level_latency_tracking_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['resource_level_latency_tracking_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['resource_level_latency_tracking_options']['refresh_rate_ms'] %>
 
 # Database summary stats options
 db_summary_stats_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['db_summary_stats_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['db_summary_stats_options']['refresh_rate_ms'] %>
 
 # Cluster summary stats options
 cluster_summary_stats_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['cluster_summary_stats_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['cluster_summary_stats_options']['refresh_rate_ms'] %>
   
 # Spark cluster summary stats options
 spark_cluster_info_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['spark_cluster_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['spark_cluster_info_options']['refresh_rate_ms'] %>
 
 # Spark application stats options
 spark_application_info_options:
-    enabled: false
-    refresh_rate_ms: 10000
+    enabled: <%= node['cassandra']['dse']['spark_application_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['spark_application_info_options']['refresh_rate_ms'] %>
     driver:
         # enables or disables writing of the metrics collected at Spark Driver to Cassandra
-        sink: false
+        sink: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['sink'] %>
         # enables or disables Spark Cassandra Connector metrics at Spark Driver
-        connectorSource: false
+        connectorSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['connectorSource'] %>
         # enables or disables JVM heap and GC metrics at Spark Driver
-        jvmSource: false
+        jvmSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['jvmSource'] %>
         # enables or disables application state metrics
-        stateSource: false
+        stateSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['stateSource'] %>
     executor:
         # enables or disables writing of the metrics collected at executors to Cassandra
-        sink: false
+        sink: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['sink'] %>
         # enables or disables Spark Cassandra Connector metrics at executors
-        connectorSource: false
+        connectorSource: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['connectorSource'] %>
         # enables or disables JVM heap and GC metrics at executors
-        jvmSource: false
+        jvmSource: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['jvmSource'] %>
 
 # Column Family Histogram data tables options
 histogram_data_options:
-  enabled: false
-  refresh_rate_ms: 10000
-  retention_count: 3
+  enabled: <%= node['cassandra']['dse']['histogram_data_options']['enabled'] %>
+  refresh_rate_ms: <%= node['cassandra']['dse']['histogram_data_options']['refresh_rate_ms'] %>
+  retention_count: <%= node['cassandra']['dse']['histogram_data_options']['retention_count'] %>
 
 # User/Resource latency tracking settings
 user_level_latency_tracking_options:
-   enabled: false
-   refresh_rate_ms: 10000
-   top_stats_limit: 100
-   quantiles: false
+   enabled: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['enabled'] %>
+   refresh_rate_ms: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['refresh_rate_ms'] %>
+   top_stats_limit: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['top_stats_limit'] %>
+   quantiles: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['quantiles'] %>
 
 # Solr Performance Objects
 
 # Solr indexing error log options
 solr_indexing_error_log_options:
-    enabled: false
-    ttl_seconds: 604800
-    async_writers: 1
+    enabled: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['ttl_seconds'] %>
+    async_writers: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['async_writers'] %>
    
 # Solr slow query log options
 solr_slow_sub_query_log_options:
-    enabled: false
-    ttl_seconds: 604800
-    async_writers: 1
-    threshold_ms: 100
+    enabled: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['ttl_seconds'] %>
+    async_writers: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['async_writers'] %>
+    threshold_ms: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['threshold_ms'] %>
 
 # Solr UpdateHandler metrics options
 solr_update_handler_metrics_options:
-    enabled: false
-    ttl_seconds: 604800
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['refresh_rate_ms'] %>
 
 # Solr request handler metrics options
 solr_request_handler_metrics_options:
-    enabled: false
-    ttl_seconds: 604800
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['refresh_rate_ms'] %>
 
 # Solr index statistics options
 solr_index_stats_options:
-    enabled: false
-    ttl_seconds: 604800
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['solr_index_stats_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_index_stats_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_index_stats_options']['refresh_rate_ms'] %>
 
 # Solr cache statistics options
 solr_cache_stats_options:
-    enabled: false
-    ttl_seconds: 604800
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['solr_cache_stats_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_cache_stats_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_cache_stats_options']['refresh_rate_ms'] %>
     
 # Solr latency snapshot options
 solr_latency_snapshot_options:
-    enabled: false
-    ttl_seconds: 604800
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['refresh_rate_ms'] %>
 
 # NodeHealth options
 node_health_options:
-    enabled: false
-    refresh_rate_ms: 60000
+    enabled: <%= node['cassandra']['dse']['node_health_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['node_health_options']['refresh_rate_ms'] %>
 
 # The directory where system keys are kept
 #
@@ -297,7 +297,7 @@ node_health_options:
 # Dse will need to be able to read and write to the directory.
 #
 # This directory should have 700 permissions and belong to the dse user
-system_key_directory: /etc/dse/conf
+system_key_directory: <%= node['cassandra']['dse']['system_key_directory'] %>
 
 # If this is set to true, DSE will expect the following config values to be encrypted:
 #   resources/cassandra/conf/cassandra.yaml:
@@ -312,7 +312,7 @@ system_key_directory: /etc/dse/conf
 # it's an error if the passwords aren't encrypted
 #
 # config values can be encrypted with dsetool encryptconfigvalue
-config_encryption_active: false
+config_encryption_active: <%= node['cassandra']['dse']['config_encryption_active'] %>
 
 # the name of the system key used to encrypt / decrypt passwords stored
 # in configuration files.
@@ -321,7 +321,7 @@ config_encryption_active: false
 # this name isn't in the system key directory
 #
 # keyfiles, and KMIP managed keys can be created with dsetool createsystemkey
-config_encryption_key_name: system_key
+config_encryption_key_name: <%= node['cassandra']['dse']['config_encryption_key_name'] %>
 
 # Spark
 # The fraction of available system resources to be used by Spark Worker
@@ -434,13 +434,13 @@ audit_logging_options:
 # system_traces keyspace. Those tables should be configured to encrypt their data
 # on disk by using an encrypting compressor.
 system_info_encryption:
-  enabled: false
-  cipher_algorithm: AES
-  secret_key_strength: 128
-  chunk_length_kb: 64
+  enabled: <%= node['cassandra']['dse']['system_info_encryption']['enabled'] %>
+  cipher_algorithm: <%= node['cassandra']['dse']['system_info_encryption']['cipher_algorithm'] %>
+  secret_key_strength: <%= node['cassandra']['dse']['system_info_encryption']['secret_key_strength'] %>
+  chunk_length_kb: <%= node['cassandra']['dse']['system_info_encryption']['chunk_length_kb'] %>
   # the name of the keys file that will be created to encrypt system tables.
   # This file will be created at <system_key_directory>/system/<key_name>
-  key_name: system_table_keytab
+  key_name: <%= node['cassandra']['dse']['system_info_encryption']['key_name'] %>
 
   # selects an alternate key provider for local encryption. Useful for
   # using a kmip host as a key provider
