@@ -286,7 +286,6 @@ solr_latency_snapshot_options:
 
 # NodeHealth options
 node_health_options:
-    enabled: <%= node['cassandra']['dse']['node_health_options']['enabled'] %>
     refresh_rate_ms: <%= node['cassandra']['dse']['node_health_options']['refresh_rate_ms'] %>
 
 # The directory where system keys are kept
