@@ -75,6 +75,7 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
 #### cassandra.yaml settings
  * `node["cassandra"]["listen_address"]` (default: `node['ipaddress']`): the ipaddress to use for listen address
  * `node["cassandra"]["rpc_address"]` (default: `node['ipaddress']`): the ipaddress to use for rpc address
+ * `node["cassandra"]["broadcast_rpc_address"]` (default: `nill`): the rpc address to broadcast to drivers & nodes
  * `node["cassandra"]["broadcast_address"]` (default: `nil`): the ipaddress to use for broadcast address
  * `node["cassandra"]["seeds"]` (default: `node['ipaddress']`): the ipaddress to use for the seed list
  * `node["cassandra"]["concurrent_reads"]` (default: `32`): concurrent reads setting

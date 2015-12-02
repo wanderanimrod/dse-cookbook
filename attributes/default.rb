@@ -43,6 +43,7 @@ default['cassandra']['commit_dir']             = '/var/lib/cassandra/commitlog'
 
 default['cassandra']['listen_address']         = node['ipaddress']
 default['cassandra']['rpc_address']            = node['ipaddress']
+default['cassandra']['broadcast_rpc_address']  = nil
 default['cassandra']['broadcast_address']      = nil
 default['cassandra']['seeds']                  = node['ipaddress']
 default['cassandra']['concurrent_reads']       = 32
