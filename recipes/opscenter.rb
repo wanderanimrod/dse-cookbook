@@ -37,4 +37,5 @@ end
 service 'opscenterd' do
   action [:enable, :start]
   pattern 'start_opscenter.py'
+  subscribes :restart, 'template[/etc/opscenter/opscenterd.conf]'
 end
