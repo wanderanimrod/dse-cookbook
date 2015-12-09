@@ -9,6 +9,19 @@ end
 describe 'dse with default settings' do
   cached(:chef_run) { ChefSpec::ServerRunner.converge('dse::default') }
 
+  it 'create group' do
+    expect(chef_run).to create_group('cassandra').with(
+      system: true
+    )
+  end
+
+  it 'create user' do
+    expect(chef_run).to create_user('cassandra').with(
+      system: true,
+      gid: 'cassandra'
+    )
+  end
+
   it 'creates the cassandra data directory /data/cassandra' do
     expect(chef_run).to create_directory('/data/cassandra').with(
       user: 'cassandra',
@@ -20,6 +33,15 @@ describe 'dse with default settings' do
 
   it 'creates the cassandra commit log directory /var/lib/cassandra/commitlog' do
     expect(chef_run).to create_directory('/var/lib/cassandra/commitlog').with(
+      user: 'cassandra',
+      group: 'cassandra',
+      mode: '755',
+      recursive: true
+    )
+  end
+
+  it 'creates the cassandra saved caches directory /var/lib/cassandra/saved_caches' do
+    expect(chef_run).to create_directory('/var/lib/cassandra/saved_caches').with(
       user: 'cassandra',
       group: 'cassandra',
       mode: '755',

@@ -48,6 +48,20 @@ when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   end
 end
 
+# create group
+group node['cassandra']['group'] do
+  system true
+  action :create
+end
+
+# create user
+user node['cassandra']['user'] do
+  comment 'DSE Cassandra User'
+  gid node['cassandra']['group']
+  system true
+  action :create
+end
+
 # create the data directories for Cassandra
 node['cassandra']['data_dir'].each do |dir|
   directory dir do
@@ -59,13 +73,16 @@ node['cassandra']['data_dir'].each do |dir|
   end
 end
 
-# Make sure the commit directory exists (in case we changed it from default)
-directory node['cassandra']['commit_dir'] do
-  owner node['cassandra']['user']
-  group node['cassandra']['group']
-  mode '755'
-  recursive true
-  action :create
+# Make sure the commit & saved_caches directory exists (in case we changed it from default)
+[node['cassandra']['commit_dir'],
+ File.join(node['cassandra']['root_dir'], 'saved_caches')].each do |dir|
+  directory dir do
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+    mode '755'
+    recursive true
+    action :create
+  end
 end
 
 # do you want the datastax-agent for opscenter?
