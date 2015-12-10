@@ -63,5 +63,6 @@ bash 'import public keys' do
   not_if do
     File.exist?("#{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.imported")
   end
+  only_if { node['cassandra']['dse']['import_public_keys'] }
 end
 # end

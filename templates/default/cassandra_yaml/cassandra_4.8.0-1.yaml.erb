@@ -825,9 +825,9 @@ server_encryption_options:
 
 # enable or disable client/server encryption.
 client_encryption_options:
-    enabled: false
-    keystore: resources/dse/conf/.keystore
-    keystore_password: cassandra
+    enabled: <%= node["cassandra"]["dse"]["client_encryption_enabled"] %>
+    keystore: <%= node["cassandra"]["dse"]["keystore"] %>
+    keystore_password: <%= @ssl_password.call %>
     # require_client_auth: false
     # Set trustore and truststore_password if require_client_auth is true
     # truststore: resources/dse/conf/.truststore
