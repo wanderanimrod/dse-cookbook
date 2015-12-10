@@ -5,3 +5,5 @@ hosts: <%= node["datastax-agent"]["hosts"] %>
 <% if node["datastax-agent"]["local_interface"] %>
 local_interface: "<%= node["datastax-agent"]["local_interface"] %>"
 <% end %>
+
+use_ssl: <%= !node["datastax-agent"]["use_ssl"].nil? && node["datastax-agent"]["use_ssl"]%>
