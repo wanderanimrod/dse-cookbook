@@ -326,9 +326,11 @@ These are generic java settings. Datastax recommends oracle java, so override op
 This portion is under construction. SSL does not currently 100% work.
  * `node["cassandra"]["dse"]["cassandra_ssl_dir"]` (default: `/etc/cassandra`): the directory to use for pem files
  * `node["cassandra"]["dse"]["password_file"]` (default: `cassandra_pass.txt`): the file to store the keystore pass in
- * `node["cassandra"]["dse"]["internode_encyption"]` (default: `none`): the encyption to use (all, dc, rack)
+ * `node["cassandra"]["dse"]["internode_encryption"]` (default: `none`): the encyption to use (all, dc, rack)
  * `node["cassandra"]["dse"]["keystore"]` (default: `#{node["cassandra"]["dse"]["cassandra_ssl_dir"]}/#{node["hostname"]}.keystore`): keystore name
  * `node["cassandra"]["dse"]["truststore"]` (default: `#{node["cassandra"]["dse"]["cassandra_ssl_dir"]}/#{node["hostname"]}.truststore`): truststore name
+ * `node["cassandra"]["dse"]["client_encryption_enabled"]` (default: `false`): enable client-to-node encryption
+ * `node["cassandra"]["dse"]["import_public_keys"]` (default: `true`): allow attempt to import public keys during Chef run
 
 ### datastax-agent.rb
 These attributes are used to conigure the datastax-agent. This is used with Datastax Opscenter.
@@ -337,6 +339,7 @@ These attributes are used to conigure the datastax-agent. This is used with Data
 * `node["datastax-agent"]["version"]` (default: `4.1.1-1`): the version of the datastax agent to install
 * `node["datastax-agent"]["conf_dir"]` (default: `/var/lib/datastax-agent/conf`): where the datastax-agent conf file is
 * `node["datastax-agent"]["opscenter_ip"]` (default: `192.168.32.3`): the Opscenter IP to connect to
+* `node["datastax-agent"]["use_ssl"]` (default: `nil`): enable the use of SSL for datastax agent communication with opscenter
 
 
 ## Dependencies
