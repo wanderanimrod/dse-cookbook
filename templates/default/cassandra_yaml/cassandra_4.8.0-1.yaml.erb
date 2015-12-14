@@ -487,7 +487,7 @@ rpc_port: 9160
 # be set to 0.0.0.0. If left blank, this will be set to the value of
 # rpc_address. If rpc_address is set to 0.0.0.0, broadcast_rpc_address must
 # be set.
-# broadcast_rpc_address: 1.2.3.4
+<%= !node['cassandra']['broadcast_rpc_address'].nil? ? "broadcast_rpc_address: #{node['cassandra']['broadcast_rpc_address']}" : "# broadcast_rpc_address: 1.2.3.4"%>
 
 # enable or disable keepalive on rpc/native connections
 rpc_keepalive: true
@@ -825,9 +825,9 @@ server_encryption_options:
 
 # enable or disable client/server encryption.
 client_encryption_options:
-    enabled: false
-    keystore: resources/dse/conf/.keystore
-    keystore_password: cassandra
+    enabled: <%= node["cassandra"]["dse"]["client_encryption_enabled"] %>
+    keystore: <%= node["cassandra"]["dse"]["keystore"] %>
+    keystore_password: <%= @ssl_password.call %>
     # require_client_auth: false
     # Set trustore and truststore_password if require_client_auth is true
     # truststore: resources/dse/conf/.truststore

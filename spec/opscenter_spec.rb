@@ -24,6 +24,8 @@ describe 'dse::opscenter' do
       owner: 'root',
       group: 'root'
     )
+    template = chef_run.template('/etc/opscenter/opscenterd.conf')
+    expect(template).to notify('service[opscenterd]').to(:restart)
   end
 
   it 'renders the opscenterd.conf file with content from ./spec/rendered_templates/opscenterd.conf' do

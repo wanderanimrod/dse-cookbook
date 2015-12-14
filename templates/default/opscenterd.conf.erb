@@ -8,11 +8,11 @@ interface = <%= node['opscenter']['http_interface'] %>
 # that you wish to use for your OpsCenter install, as well as the port you would like
 # to serve ssl traffic from.
 #ssl_keyfile = /var/lib/opscenter/ssl/opscenter.key
-<%= "ssl_keyfile = #{node['opscenter']['ssl_keyfile']}" if node['opscenter']['ssl_keyfile'] -%>
+<%= "ssl_keyfile = #{node['opscenter']['ssl_keyfile']}" + "\n" if node['opscenter']['ssl_keyfile'] -%>
 #ssl_certfile = /var/lib/opscenter/ssl/opscenter.pem
-<%= "ssl_certifile = #{node['opscenter']['ssl_certfile']}" if node['opscenter']['ssl_certfile'] -%>
+<%= "ssl_certfile = #{node['opscenter']['ssl_certfile']}" + "\n" if node['opscenter']['ssl_certfile'] -%>
 #ssl_port = 8443
-<%= "ssl_port = #{node['opscenter']['ssl_port']}" if node['opscenter']['ssl_port'] -%>
+<%= "ssl_port = #{node['opscenter']['ssl_port']}" + "\n" if node['opscenter']['ssl_port'] -%>
 
 [logging]
 # level may be TRACE, DEBUG, INFO, WARN, or ERROR
@@ -68,3 +68,8 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 [labs]
 orbited_longpoll = true
 <% end -%>
+
++<% if !node["datastax-agent"]["use_ssl"].nil? && node["datastax-agent"]["use_ssl"] -%>
++[agents]
++use_ssl = true
++<% end -%>
