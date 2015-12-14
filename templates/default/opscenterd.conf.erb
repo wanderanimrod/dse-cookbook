@@ -69,7 +69,7 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 orbited_longpoll = true
 <% end -%>
 
-+<% if !node["datastax-agent"]["use_ssl"].nil? && node["datastax-agent"]["use_ssl"] -%>
-+[agents]
-+use_ssl = true
-+<% end -%>
+<% if !node["datastax-agent"]["use_ssl"].nil? && node["datastax-agent"]["use_ssl"] -%>
+[agents]
+use_ssl = true
+<% end -%>
