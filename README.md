@@ -67,6 +67,7 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["num_tokens"]` (default: `256`): set the number of tokens to use
  * `node["cassandra"]["solr"]` (default: `false`): enable solr or not
  * `node["cassandra"]["hadoop"]` (default: `false`): enable hadoop or not
+ * `node["cassandra"]["spark"]` (default: `false`): enable spark or not
 
  * `node["cassandra"]["dse_version"]` (default: `4.0.3-1`): dse version to install
  * `node["cassandra"]["user"]` (default: `cassandra`): the cassandra user
