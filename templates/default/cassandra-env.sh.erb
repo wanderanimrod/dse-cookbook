@@ -252,6 +252,9 @@ JVM_OPTS="$JVM_OPTS -Djava.net.preferIPv4Stack=true"
 #
 # add this if you're having trouble connecting:
 # JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=<public name>"
+<% if node['cassandra']['forcermi'] %>
+JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=<%=node['ipaddress']%>"
+<% end %>
 #
 # see
 # https://blogs.oracle.com/jmxetc/entry/troubleshooting_connection_problems_in_jconsole

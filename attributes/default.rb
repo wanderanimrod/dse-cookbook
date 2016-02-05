@@ -9,7 +9,7 @@ default['cassandra']['spark']                  = false
 
 default['cassandra']['dse_version']            = '4.7.2-1'
 default['cassandra']['jamm_version']           = '0.3.0'
-
+default['cassandra']['forcermi']               =  false
 # The order of this package list is important to be able to install a version other than the latest
 default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libhadoop',
