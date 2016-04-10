@@ -216,6 +216,7 @@ node.default['cassandra']['metrics_reporter'] = {
  * `node['cassandra']['dse']['solr_latency_snapshot_options']['refresh_rate_ms']` (default: `60,000`)
  * `node['cassandra']['dse']['node_health_options']['enabled']` (default: `false`)
  * `node['cassandra']['dse']['node_health_options']['refresh_rate_ms']` (default: `60,000`)
+ * `node['cassandra']['dse']['node_health_options']['uptime_ramp_up_period_seconds']` (default: `86,400`)
 
 #### system encryption settings
  * `node['cassandra']['dse']['system_key_directory']` (default: `'/etc/dse/conf'`)
@@ -331,6 +332,7 @@ This portion is under construction. SSL does not currently 100% work.
  * `node["cassandra"]["dse"]["keystore"]` (default: `#{node["cassandra"]["dse"]["cassandra_ssl_dir"]}/#{node["hostname"]}.keystore`): keystore name
  * `node["cassandra"]["dse"]["truststore"]` (default: `#{node["cassandra"]["dse"]["cassandra_ssl_dir"]}/#{node["hostname"]}.truststore`): truststore name
  * `node["cassandra"]["dse"]["client_encryption_enabled"]` (default: `false`): enable client-to-node encryption
+ * `node['cassandra']['dse']["client_encryption_optional"]` (default: `false`): specifies whether encryption, when enabled, is optional
  * `node["cassandra"]["dse"]["import_public_keys"]` (default: `true`): allow attempt to import public keys during Chef run
 
 ### datastax-agent.rb
