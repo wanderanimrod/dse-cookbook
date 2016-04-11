@@ -94,6 +94,7 @@ default['cassandra']['dse']['solr_latency_snapshot_options']['ttl_seconds'] = 60
 default['cassandra']['dse']['solr_latency_snapshot_options']['refresh_rate_ms'] = 60_000
 default['cassandra']['dse']['node_health_options']['enabled'] = false
 default['cassandra']['dse']['node_health_options']['refresh_rate_ms'] = 60_000
+default['cassandra']['dse']['node_health_options']['uptime_ramp_up_period_seconds'] = 86_400
 
 default['cassandra']['dse']['system_key_directory'] = '/etc/dse/conf'
 default['cassandra']['dse']['config_encryption_active'] = false
