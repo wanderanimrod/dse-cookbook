@@ -27,6 +27,11 @@ package 'opscenter' do
   end
 end
 
+package 'python-ldap' do
+	action :install
+	only_if { "LDAP".eql?(node['opscenter']['authentication_method']) }
+end
+
 template '/etc/opscenter/opscenterd.conf' do
   source 'opscenterd.conf.erb'
   mode '644'
