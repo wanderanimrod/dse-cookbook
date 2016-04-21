@@ -19,28 +19,28 @@
 include_recipe 'dse::_repo'
 
 package 'opscenter' do
-  version node['opscenter']['version']
-  action :install
-  case node['platform']
-  when 'ubuntu', 'debian'
-    options '-o Dpkg::Options::="--force-confold"'
-  end
+	version node['opscenter']['version']
+	action :install
+	case node['platform']
+	when 'ubuntu', 'debian'
+		options '-o Dpkg::Options::="--force-confold"'
+	end
 end
 
 package 'python-ldap' do
 	action :install
-	only_if { "LDAP".eql?(node['opscenter']['authentication_method']) }
+	only_if { 'LDAP'.eql?(node['opscenter']['authentication_method']) }
 end
 
 template '/etc/opscenter/opscenterd.conf' do
-  source 'opscenterd.conf.erb'
-  mode '644'
-  owner 'root'
-  group 'root'
+	source 'opscenterd.conf.erb'
+	mode '644'
+	owner 'root'
+	group 'root'
 end
 
 service 'opscenterd' do
-  action [:enable, :start]
-  pattern 'start_opscenter.py'
-  subscribes :restart, 'template[/etc/opscenter/opscenterd.conf]'
+	action [:enable, :start]
+	pattern 'start_opscenter.py'
+	subscribes :restart, 'template[/etc/opscenter/opscenterd.conf]'
 end
