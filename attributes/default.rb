@@ -63,6 +63,7 @@ default['cassandra']['request_timeout_in_ms'] = 10_000
 default['cassandra']['thrift_framed_transport_size_in_mb'] = '15'
 default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']   = nil
+default['cassandra']['permissions_validity_in_ms']  = 2000
 
 # Role based search to assign seed nodes.
 default['cassandra']['role_based_seeds'] = false

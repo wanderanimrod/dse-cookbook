@@ -89,6 +89,8 @@ This cookbook will install DSE Cassandra by default. Other attributes you can se
  * `node["cassandra"]["thrift_framed_transport_size_in_mb"]` (default: `15`): the max size of a thrift frame
  * `node["cassandra"]["thrift_max_message_length_in_mb"]` (default: `nil`): the max message length of a thrift call
  * `node["cassandra"]["concurrent_compactors"]` (default: `nil`): the number of concurrent compactors to allow
+ * `node["cassanrda"]["permissions_validity_in_ms"]` (default: `2000`): validity period for permissions cache (disabled for AllowAllAuthorizer)
+ * `node["cassandra"]["permissions_update_interval_in_ms"]` (default: `nil`): refresh interval for permissions cache
 
 #### Role based seed selection
  * `node["cassandra"]["role_based_seeds"]` (default: `false`): set to true to assign seeds based on members of dse-seed role
