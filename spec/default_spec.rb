@@ -155,6 +155,22 @@ describe 'dse with default settings' do
   end
 end
 
+describe 'dse with node[\'cassandra\'][\'dse_version\'] >= 5.0.0-1' do
+  cached(:chef_run) do
+    ChefSpec::ServerRunner.new do |node|
+      node.set['cassandra']['dse_version'] = '5.0.0-1'
+    end.converge('dse')
+  end
+
+  it 'creates the template /etc/dse/cassandra/jvm.options' do
+    expect(chef_run).to create_template('/etc/dse/cassandra/jvm.options').with(
+      source: 'cassandra-jvm.options.erb',
+      owner: 'cassandra',
+      group: 'cassandra'
+    )
+  end
+end
+
 describe 'dse with node[\'datastax-agent\'][\'enabled\'] true' do
   cached(:chef_run) do
     ChefSpec::ServerRunner.new do |node|

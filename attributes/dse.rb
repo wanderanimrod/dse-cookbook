@@ -42,6 +42,7 @@ default['cassandra']['dse']['ldap_options']['connection_pool']['max_idle'] = nil
 
 default['cassandra']['dse']['cql_slow_log_options']['enabled'] = true
 default['cassandra']['dse']['cql_slow_log_options']['threshold_ms'] = 2_000
+default['cassandra']['dse']['cql_slow_log_options']['minimum_samples'] = 100
 default['cassandra']['dse']['cql_slow_log_options']['ttl_seconds'] = 259_200
 default['cassandra']['dse']['cql_slow_log_options']['async_writers'] = 1
 default['cassandra']['dse']['cql_system_info_options']['enabled'] = false

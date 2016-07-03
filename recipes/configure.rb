@@ -60,11 +60,28 @@ template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra.yaml" do
   group node['cassandra']['group']
 end
 
-# set up the cassandra-env.sh template (this contains java heap settings)
-template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-env.sh" do
-  source 'cassandra-env.sh.erb'
-  owner node['cassandra']['user']
-  group node['cassandra']['group']
+# check version of dse, jvm.options was introduced in 5.0.0-1
+if node['cassandra']['dse_version'] >= '5.0.0-1'
+  # set up the cassandra-env.sh template (this contains default java heap settings)
+  template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-env.sh" do
+    source "cassandra-env_#{node['cassandra']['dse_version']}.sh.erb"
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+  end
+
+  # set up JVM options (this overrides automatically derived values from cassandra-env)
+  template "#{node['cassandra']['dse']['conf_dir']}/cassandra/jvm.options" do
+    source 'cassandra-jvm.options.erb'
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+  end
+else
+  # set up the cassandra-env.sh template (this contains java heap settings)
+  template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-env.sh" do
+    source 'cassandra-env.sh.erb'
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+  end
 end
 
 # check what kind of snitch is set, since it requires different templates.

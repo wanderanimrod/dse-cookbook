@@ -1,0 +1,996 @@
+# Memory limit for DSE In-Memory tables as a fraction of system memory (the default is 0.2, or 20%)
+max_memory_to_lock_fraction: 0.20
+
+# Can also be specified as a maximum in MB; the fraction value is ignored if this is set to a non-zero value.
+# max_memory_to_lock_mb: 10240
+
+# Enable the Hive Meta Store via Cassandra
+hive_meta_store_enabled: true
+
+# Authentication options
+#
+# These options are used if the authenticator option in cassandra.yaml is set to
+# com.datastax.bdp.cassandra.auth.DseAuthenticator
+#
+# The enabled option controls whether the DseAuthenticator will authenticate users. If
+# set to true users will be authenticated, if set to false they will not.
+#
+# DseAuthenticator allows multiple authentication schemes to be used at the same time.
+# The schemes to be used are controlled by the default_scheme and allowed_schemes options.
+# A driver can select the scheme to use during authentication.
+#
+# The default_scheme option selects which authentication scheme will be used if the driver
+# does not request a specific scheme. This can be one of the following values:
+#   internal - plain text authentication using the Cassandra password authenticator
+#   ldap     - plain text authentication using the passthrough ldap authenticator
+#   kerberos - gssapi authentication using the kerberos authenticator
+# The other_schemes option is a list of schemes that can also be selected for use by a
+# driver and can be a list of the above schemes.
+#
+# The scheme_permissions option controls whether roles need to have permission granted to
+# them in order to use specific authentication schemes. These permissions can be granted
+# only when the DseAuthorizer is used.
+#
+# The allow_digest_with_kerberos option controls whether digest-md5 authentication is also
+# allowed when kerberos is one of the authentication schemes. If set to false, it will not
+# be allowed. You must set allow_digest_with_kerberos to true in analytics clusters to use Hadoop
+# inter-node authentication with Hadoop and Spark jobs.
+#
+# The plain_text_without_ssl controls how the DseAuthenticator reacts to plain text
+# authentication requests over unencrypted client connections. It can be one of:
+#   block  - block the request with an authentication error
+#   warn   - log a warning about the request but allow it to continue
+#   allow  - allow the request without any warning
+#
+# The transitional_mode option allows the DseAuthenticator to operate in a transitional
+# mode during setup of authentication in a cluster. This can be one of the following
+# values:
+#   disabled   - transitional mode is disabled
+#   permissive - Only super users are authenticated and logged in, all other
+#                authentication attempts will be logged in as the anonymous user
+#   normal     - If credentials are passed they are authenticated. If the
+#                authentication is successful then the user is logged in, otherwise
+#                the user is logged in as anonymous. If no credentials are passed,
+#                then the user is logged in as anonymous
+#   strict     - If credentials are passed they are authenticated. If the
+#                authentication is successful, the user is logged in. If the
+#                authentication fails, an authentication error is returned. If no
+#                credentials are passed, the user is logged in as anonymous
+authentication_options:
+    enabled: false
+    default_scheme: kerberos
+    other_schemes:
+      - internal
+    scheme_permissions: true
+    allow_digest_with_kerberos: true
+    plain_text_without_ssl: warn
+    transitional_mode: disabled
+
+#
+# Role Management Options
+#
+# These options are used when the role_manager option in cassandra.yaml is set to
+# com.datastax.bdp.cassandra.auth.DseRoleManager
+#
+# mode can be one of:
+#   internal - the granting and revoking of roles is managed internally
+#              using the GRANT ROLE and REVOKE ROLE statements
+#   ldap - the granting and revoking of roles is managed by an external
+#          LDAP server configured using the ldap_options.
+role_management_options:
+    mode: internal
+
+# Authorization options
+#
+# The enabled option controls whether the DseAuthorizer will perform authorization. If
+# set to true authorization is performed, if set to false it is not.
+#
+# The transitional_mode option allows the DseAuthorizer to operate in a transitional
+# mode during setup of authorization in a cluster. This can be one of the following
+# values:
+#   disabled   - transitional mode is disabled
+#   normal     - permissions can be granted to resources but are not enforced
+#   strict     - permissions can be granted to resources and are enforced on
+#                authenticated users. They are not enforced against anonymous
+#                users
+authorization_options:
+    enabled: false
+    transitional_mode: disabled
+
+# Kerberos options
+#
+# The qop is the Quality of Protection (QOP) values that clients and servers
+# can use for each connection.  Below is a list of valid values and their meanings.
+#   auth - (default) authentication only
+#   auth-int - authentication plus integity protection of all transmitted data
+#   auth-conf - authetication plus integrity protection and encryption of all
+#              transmitted data
+# Warning: Encryption using auth-conf is separate and completely independent
+# of whether encryption is done using SSL.  If auth-conf is selected here
+# and SSL is enabled, the transmitted data is encrypted twice.
+kerberos_options:
+    keytab: resources/dse/conf/dse.keytab
+    service_principal: dse/_HOST@REALM
+    http_principal: HTTP/_HOST@REALM
+    qop: auth
+
+# LDAP options
+#
+# These are options are used when the com.datastax.bdp.cassandra.auth.LdapAuthenticator
+# is configured as the authenticator in cassandra.yaml
+#
+<%= ("com.datastax.bdp.cassandra.auth.LdapAuthenticator".eql?(node['cassandra']['authenticator'])) ? "ldap_options:" : "# ldap_options:" %>
+    <%= !node['cassandra']['dse']['ldap_options']['server_host'].nil? ? "server_host: #{node['cassandra']['dse']['ldap_options']['server_host']}" : "# server_host: localhost"%>
+    # Port to use to connect to the LDAP server. This is normally 389 for unencrypted
+    # connections and 636 for ssl encrypted connections. If use_tls is set to true, use the
+    # unencrypted port
+    <%= !node['cassandra']['dse']['ldap_options']['server_port'].nil? ? "server_port: #{node['cassandra']['dse']['ldap_options']['server_port']}" : "# server_port: 389"%>
+    # The distinguished name (DN) of the user that is used to search for other users on the
+    # LDAP server. This user should have only the necessary permissions to do the search
+    # If not present then an anonymous bind is used for the search
+    <%= !node['cassandra']['dse']['ldap_options']['search_dn'].nil? ? "search_dn: #{node['cassandra']['dse']['ldap_options']['search_dn']}" : "# search_dn: cn=Admin"%>
+    # Password of the search user
+    <%= !node['cassandra']['dse']['ldap_options']['search_password'].nil? ? "search_password: #{node['cassandra']['dse']['ldap_options']['search_password']}" : "# search_password: secret"%>
+    # Set to true to use an SSL encrypted connection. In this case the server_port needs
+    # to be set to the LDAP port for the server
+    <%= !node['cassandra']['dse']['ldap_options']['use_ssl'].nil? ? "use_ssl: #{node['cassandra']['dse']['ldap_options']['use_ssl']}" : "# use_ssl: false"%>
+    # Set to true to initiate a TLS encrypted connection on the default ldap port
+    <%= !node['cassandra']['dse']['ldap_options']['use_tls'].nil? ? "use_tls: #{node['cassandra']['dse']['ldap_options']['use_tls']}" : "# use_tls: false"%>
+    <%= !node['cassandra']['dse']['ldap_options']['truststore_path'].nil? ? "truststore_path: #{node['cassandra']['dse']['ldap_options']['truststore_path']}" : "# truststore_path:"%>
+    <%= !node['cassandra']['dse']['ldap_options']['truststore_password'].nil? ? "truststore_password: #{node['cassandra']['dse']['ldap_options']['truststore_password']}" : "# truststore_password:"%>
+    <%= !node['cassandra']['dse']['ldap_options']['truststore_type'].nil? ? "truststore_type: #{node['cassandra']['dse']['ldap_options']['truststore_type']}" : "# truststore_type: jks"%>
+    <%= !node['cassandra']['dse']['ldap_options']['user_search_base'].nil? ? "user_search_base: #{node['cassandra']['dse']['ldap_options']['user_search_base']}" : "# user_search_base: ou=users,dc=example,dc=com"%>
+    <%= !node['cassandra']['dse']['ldap_options']['user_search_filter'].nil? ? "user_search_filter: #{node['cassandra']['dse']['ldap_options']['user_search_filter']}" : "# user_search_filter: (uid={0})"%>
+    # Set to the attribute on the user entry containing group membership information.
+#    user_memberof_attribute: memberof
+    # The group_search_type defines how group membership will be determined for a user. It
+    # can be one of:
+    #   directory_search - will do a subtree search of group_search_base using
+    #                      group_search_filter to filter the results
+    #   memberof_search - will get groups from the memberof attribute of the user. This
+    #                     requires the directory server to have memberof support
+#    group_search_type: directory_search
+#    group_search_base:
+#    group_search_filter: (uniquemember={0})
+    # The attribute in the group entry that holds the group name.
+#    group_name_attribute: cn
+    # Validity period for the credentials cache in milli-seconds (remote bind is an expensive
+    # operation). Defaults to 0, set to 0 to disable.
+    <%= !node['cassandra']['dse']['ldap_options']['credentials_validity_in_ms'].nil? ? "credentials_validity_in_ms: #{node['cassandra']['dse']['ldap_options']['credentials_validity_in_ms']}" : "# credentials_validity_in_ms: 0"%>
+    # Validity period for the search cache in seconds. Defaults to 0, set to 0 to disable.
+    <%= !node['cassandra']['dse']['ldap_options']['search_validity_in_seconds'].nil? ? "search_validity_in_seconds: #{node['cassandra']['dse']['ldap_options']['search_validity_in_seconds']}" : "# search_validity_in_seconds: 0"%>
+    <%= !node['cassandra']['dse']['ldap_options']['connection_pool']['max_active'].nil? || !node['cassandra']['dse']['ldap_options']['connection_pool']['max_idle'].nil? ? "connection_pool:" : "# connection_pool:"%>
+        <%= !node['cassandra']['dse']['ldap_options']['connection_pool']['max_active'].nil? ? "max_active: #{node['cassandra']['dse']['ldap_options']['connection_pool']['max_active']}" : "# max_active: 8"%>
+        <%= !node['cassandra']['dse']['ldap_options']['connection_pool']['max_idle'].nil? ? "max_idle: #{node['cassandra']['dse']['ldap_options']['connection_pool']['max_idle']}" : "# max_idle: 8"%>
+
+# To ensure that data with a TTL is purged from Solr indexes when it expires,
+# DSE periodically checks indexes for data that has exceeded its TTL. These settings
+# control the scheduling & execution of those checks.
+ttl_index_rebuild_options:
+    # by default, schedule a check every 300 seconds
+    fixed_rate_period: 300
+    # the first check is delayed to speed up startup time
+    initial_delay: 20
+    # documents subject to TTL are checked in batches: this configures the maximum number of
+    # docs checked per batch
+    max_docs_per_batch: 200
+    # maximum number of cores that can execute TTL cleanup concurrently
+    thread_pool_size: 1
+
+# Solr shard transport options, for inter-node communication between Solr nodes.
+shard_transport_options:
+#
+# Default type from 4.5.0 onwards is "netty" for TCP-based communication,
+# providing lower latency, improved throughput and reduced resource consumption.
+# The other type is "http" for plain old Solr communication via the standard
+# HTTP-based interface.
+#
+# WARNING: The "http" transport type is now deprecated and will be removed in a future release.
+    type: netty
+#
+# Options specific to the "netty" transport type.
+#
+# The TCP listen port, mandatory if you either want to use the "netty" transport
+# type, or want to later migrate to it from the "http" one. If you plan to use
+# and stay with the "http" one, either comment it out or set it to -1. Once every
+# node in the cluster is running DSE 5.0, requests coordinated by this node will
+# no longer contact other nodes on this port, but will instead use the new binary
+# protocol. This option will be removed in a future
+# release of DSE.
+    netty_server_port: 8984
+#
+# Note that the following settings apply only to the legacy Netty transport.
+# (Starting with DSE 5.0, the common messaging service is used and the configuration
+# options for it are available later in this file under internode_messaging_options.)
+#
+# The number of server acceptor threads (default is number of available processors).
+#   netty_server_acceptor_threads:
+# The number of server worker threads (default is number of available processors * 8).
+#   netty_server_worker_threads:
+# The number of client worker threads (default is number of available processors * 8).
+#   netty_client_worker_threads:
+# The max number of client connections (default is 100).
+#   netty_client_max_connections:
+# The cumulative shard request timeout, in milliseconds (default is 60000).
+#   netty_client_request_timeout:
+#
+# Options specific to the "http" transport type.
+#
+# WARNING: The "http" transport type is now deprecated and will be removed in a future release.
+#
+# HTTP shard client timeouts in milliseconds.
+# Default is the same as Solr, that is 0, meaning no timeout at all; it is
+# strongly suggested to change it to a finite value, to avoid blocking operations.
+# Notice these settings are valid across Solr cores.
+#   http_shard_client_conn_timeout: 0
+#   http_shard_client_socket_timeout: 0
+
+# Solr index encryption options.
+solr_encryption_options:
+# Whether shared Solr decryption cache should be allocated off JVM heap.
+# Default is off heap allocation (true).
+#    decryption_cache_offheap_allocation: true
+# The maximum size of shared Solr decryption cache, in MB.
+# Default is 256 MB.
+#    decryption_cache_size_in_mb: 256
+
+# Solr indexing settings
+#
+# Max number of concurrent asynchronous indexing threads per Solr core.
+# Default is "number of available processors"; if set at 1,
+# the system reverts to the synchronous behavior, where data is
+# synchronously written into Cassandra and indexed by Solr.
+#
+# max_solr_concurrency_per_core: 2
+#
+# Allows back pressure system to adapt max auto soft commit time (defined per core in solrconfig.xml) to the actual load.
+# Setting is respected only for NRT (near real time) cores. When core has RT (real time) enabled, adaptive commits
+# are disabled regardless of this property value.
+# Default is enabled (true).
+#
+# enable_back_pressure_adaptive_nrt_commit: true
+#
+# The back pressure threshold is the target total number of queued asynchronous indexing requests per core;
+# the back pressure mechanism will throttle incoming requests to keep the queue size as close to the threshold as possible.
+# Default is 1000 * "number of available processors".
+#
+# back_pressure_threshold_per_core: 1000
+#
+# The max time to wait for flushing of async index updates, happening either
+# at Solr commit time or Cassandra flush time.
+# Flushing should always complete successfully, in order to fully sync Solr indexes
+# with Cassandra data, so should always be set at a reasonable high value,
+# expressed in minutes.
+# Default is 5.
+#
+# flush_max_time_per_core: 5
+#
+# The max time to wait for each Solr core to load upon startup or create/reload operations, expressed in minutes.
+# This is an advanced option, which should be changed only if any exceptions happen during core loading.
+# Default is 5.
+# load_max_time_per_core: 5
+
+# Applies the configured Cassandra disk failure policy to index write failures.
+# Default is disabled (false).
+#
+# enable_index_disk_failure_policy: false
+
+# The directory to store index data; each Solr core index will be stored under
+# a solrconfig_data_dir/keyspace.table directory.
+# Default is a solr.data directory inside Cassandra data directory, or as specified
+# by the dse.solr.data.dir system property
+#
+#solr_data_dir: /MyDir
+
+# The Lucene field cache has been deprecated, instead set docValues="true" on the field
+# in the schema.xml file.  After doing so RELOAD the core and reindex.
+#
+# Default: false
+#
+# solr_field_cache_enabled: false
+
+# Solr cql query options
+#
+# Max number of threads to use for retrieving rows during CQL Solr queries.
+# This value is cross-request and cross-core.
+# Default is "number of available processors" * 10.
+#
+# cql_solr_query_executor_threads: 2
+#
+# Max time in milliseconds to wait for either each row (pre-5.0) or all rows (5.0 onwards)
+# to be read from Cassandra during CQL Solr queries.
+# Default is 10000 (10 seconds).
+#
+# cql_solr_query_row_timeout: 10000
+
+# Maximum number of threads used by the performance service
+#
+#performance_max_threads: 32
+
+# CQL performance objects features:
+# * CQL Slow Log
+# * CQL System Info
+# * User Level Latency Tracking
+# * Resource Level Latency Tracking
+# * Database Summary Statistics
+
+graph_events:
+  ttl_seconds: 600
+
+# CQL slow log settings
+#  threshold:        t > 1        Log queries taking longer than t milliseconds
+#                    0 <= t <= 1  Log queries above t percentile
+#  minimum_samples:  initial number of queries before percentile filter becomes active
+
+cql_slow_log_options:
+    enabled: <%= node['cassandra']['dse']['cql_slow_log_options']['enabled'] %>
+    threshold: <%= node['cassandra']['dse']['cql_slow_log_options']['threshold_ms'] %>
+    minimum_samples: <%= node['cassandra']['dse']['cql_slow_log_options']['minimum_samples'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['cql_slow_log_options']['ttl_seconds'] %>
+
+# CQL system info tables settings
+cql_system_info_options:
+    enabled: <%= node['cassandra']['dse']['cql_system_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['cql_system_info_options']['refresh_rate_ms'] %>
+
+# Data Resource latency tracking settings
+resource_level_latency_tracking_options:
+    enabled: <%= node['cassandra']['dse']['resource_level_latency_tracking_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['resource_level_latency_tracking_options']['refresh_rate_ms'] %>
+
+# Database summary stats options
+db_summary_stats_options:
+    enabled: <%= node['cassandra']['dse']['db_summary_stats_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['db_summary_stats_options']['refresh_rate_ms'] %>
+
+# Cluster summary stats options
+cluster_summary_stats_options:
+    enabled: <%= node['cassandra']['dse']['cluster_summary_stats_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['cluster_summary_stats_options']['refresh_rate_ms'] %>
+
+# Spark cluster summary stats options
+spark_cluster_info_options:
+    enabled: <%= node['cassandra']['dse']['spark_cluster_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['spark_cluster_info_options']['refresh_rate_ms'] %>
+
+# Spark application stats options
+spark_application_info_options:
+    enabled: <%= node['cassandra']['dse']['spark_application_info_options']['enabled'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['spark_application_info_options']['refresh_rate_ms'] %>
+    driver:
+        # enables or disables writing of the metrics collected at Spark Driver to Cassandra
+        sink: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['sink'] %>
+        # enables or disables Spark Cassandra Connector metrics at Spark Driver
+        connectorSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['connectorSource'] %>
+        # enables or disables JVM heap and GC metrics at Spark Driver
+        jvmSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['jvmSource'] %>
+        # enables or disables application state metrics
+        stateSource: <%= node['cassandra']['dse']['spark_application_info_options']['driver']['stateSource'] %>
+    executor:
+        # enables or disables writing of the metrics collected at executors to Cassandra
+        sink: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['sink'] %>
+        # enables or disables Spark Cassandra Connector metrics at executors
+        connectorSource: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['connectorSource'] %>
+        # enables or disables JVM heap and GC metrics at executors
+        jvmSource: <%= node['cassandra']['dse']['spark_application_info_options']['executor']['jvmSource'] %>
+
+# Column Family Histogram data tables options
+histogram_data_options:
+  enabled: <%= node['cassandra']['dse']['histogram_data_options']['enabled'] %>
+  refresh_rate_ms: <%= node['cassandra']['dse']['histogram_data_options']['refresh_rate_ms'] %>
+  retention_count: <%= node['cassandra']['dse']['histogram_data_options']['retention_count'] %>
+
+# User/Resource latency tracking settings
+user_level_latency_tracking_options:
+   enabled: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['enabled'] %>
+   refresh_rate_ms: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['refresh_rate_ms'] %>
+   top_stats_limit: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['top_stats_limit'] %>
+   quantiles: <%= node['cassandra']['dse']['user_level_latency_tracking_options']['quantiles'] %>
+
+# Solr Performance Objects
+
+# Solr indexing error log options
+solr_indexing_error_log_options:
+    enabled: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['ttl_seconds'] %>
+    async_writers: <%= node['cassandra']['dse']['solr_indexing_error_log_options']['async_writers'] %>
+   
+# Solr slow query log options
+solr_slow_sub_query_log_options:
+    enabled: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['ttl_seconds'] %>
+    async_writers: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['async_writers'] %>
+    threshold_ms: <%= node['cassandra']['dse']['solr_slow_sub_query_log_options']['threshold_ms'] %>
+
+# Solr UpdateHandler metrics options
+solr_update_handler_metrics_options:
+    enabled: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_update_handler_metrics_options']['refresh_rate_ms'] %>
+
+# Solr request handler metrics options
+solr_request_handler_metrics_options:
+    enabled: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_request_handler_metrics_options']['refresh_rate_ms'] %>
+
+# Solr index statistics options
+solr_index_stats_options:
+    enabled: <%= node['cassandra']['dse']['solr_index_stats_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_index_stats_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_index_stats_options']['refresh_rate_ms'] %>
+
+# Solr cache statistics options
+solr_cache_stats_options:
+    enabled: <%= node['cassandra']['dse']['solr_cache_stats_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_cache_stats_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_cache_stats_options']['refresh_rate_ms'] %>
+    
+# Solr latency snapshot options
+solr_latency_snapshot_options:
+    enabled: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['enabled'] %>
+    ttl_seconds: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['ttl_seconds'] %>
+    refresh_rate_ms: <%= node['cassandra']['dse']['solr_latency_snapshot_options']['refresh_rate_ms'] %>
+
+# Node health is a score-based representation of how fit a node is to handle queries. The score is a
+# function of how long a node has been up and the rate of dropped mutations in the recent past.
+node_health_options:
+    refresh_rate_ms: <%= node['cassandra']['dse']['node_health_options']['refresh_rate_ms'] %>
+    # The amount of continuous uptime required for the node's uptime score to
+    # advance from 0 to 1. (Default: 86400 seconds, or 1 day)
+    #
+    # (Default: 86400 seconds, or 1 day)
+    uptime_ramp_up_period_seconds: 86400
+    # The window in the past over which the rate of dropped mutations affects the node health score.
+    # (Default: 30 minutes)
+    dropped_mutation_window_minutes: 30
+
+# If enabled (true), replica selection for distributed Solr queries takes node health into account
+# when multiple candidates exist for a particular token range. Set this to false to ignore
+# node health when choosing replicas.
+#
+# Health-based routing allows us to make a trade-off between index consistency and query throughput. If
+# the primary concern is query performance, it may make sense to set this to "false".
+#
+# Default is enabled (true).
+enable_health_based_routing: true
+
+# Lease metrics. Enable these to help monitor the performance of the lease subsystem.
+# ttl_seconds controls how long the log of lease holder changes persists.
+lease_metrics_options:
+    enabled: false
+    ttl_seconds: 604800
+
+# The directory where system keys are kept
+#
+# Keys used for sstable encryption must be distributed to all nodes
+# DSE must be able to read and write to the directory.
+#
+# This directory should have 700 permissions and belong to the dse user
+system_key_directory: <%= node['cassandra']['dse']['system_key_directory'] %>
+
+# If this is set to true, DSE will expect the following config values to be encrypted:
+#   resources/cassandra/conf/cassandra.yaml:
+#     server_encryption_options.keystore_password
+#     server_encryption_options.truststore_password
+#     client_encryption_options.keystore_password
+#     client_encryption_options.truststore_password
+#   resources/dse/conf/dse.yaml:
+#     ldap_options.search_password
+#     ldap_options.truststore_password
+#
+# it's an error if the passwords aren't encrypted
+#
+# config values can be encrypted with dsetool encryptconfigvalue
+config_encryption_active: <%= node['cassandra']['dse']['config_encryption_active'] %>
+
+# the name of the system key used to encrypt / decrypt passwords stored
+# in configuration files.
+#
+# If config_encryption_active is true, it's an error if a valid key with
+# this name isn't in the system key directory
+#
+# keyfiles, and KMIP managed keys can be created with dsetool createsystemkey
+config_encryption_key_name: <%= node['cassandra']['dse']['config_encryption_key_name'] %>
+
+# Spark
+# The fraction of available system resources to be used by Spark Worker
+#
+# This the only initial value, once it is reconfigured, the new value is stored
+# and retrieved on next run.
+initial_spark_worker_resources: 0.7
+
+# The length of a shared secret used to authenticate Spark components and encrypt the connections between them.
+# Note that this is not the strength of the cipher used for encrypting connections.
+spark_shared_secret_bit_length: 256
+
+# Enables Spark security based on shared secret infrastructure. This means enabling mutual authentication of
+# the Spark components as well as encryption of communication channels except Web UI.
+spark_security_enabled: false
+
+hadoop_options:
+  # The maximum number of slots that can be allocated by TaskTracker for running user tasks. By default, this value is
+  # calculated automatically. When specified manually it denotes the maximum total number of mappers and reducers which
+  # can be simultaneously run by the task tracker. Note that the individual number of mappers or reducers will never be
+  # greater than the number of physical cores - 1.
+  # task_tracker_cores: 2
+  # The maximum amount of memory that can be allocated by TaskTracker for running user tasks. By default, this value is
+  # calculated automatically. Note that this is the total memory which will be split among particular slots. It also
+  # includes Java overhead which is 128m per single slot. However, the maximum heap size of a single mapper or reducer
+  # will be no less than 256m which is the hardcoded minimum.
+  # You can use typical suffixes for memory sizes: k - kilo, m - mega, g - giga, and so on
+  # task_tracker_memory: 4g
+
+# How often Spark plugin should check for Spark Master / Worker readiness to start. The value is
+# a time (in ms) between subsequent retries.
+# spark_daemon_readiness_assertion_interval: 1000
+
+# Spark encryption can be enabled for Spark client to Spark cluster and Spark internode communication.
+# It applies to 2 out of 4 communication protocols in Spark: control messages via Akka and file
+# sharing via HTTP(S). It does not apply to RDD data exchange or to web UI. This means that
+# the encryption is used to send all configuration settings and all files which are required
+# by Spark application. They include passwords and tokens.
+#
+# Spark encryption requires truststores to be defined.
+#
+# If truststore or keystore is provided as a relative file path, the base directory for them is
+# Spark config directory denoted by SPARK_CONF_DIR environment variable (by default is points to
+# resources/spark/conf).
+spark_encryption_options:
+    enabled: false
+    keystore: .keystore
+    keystore_password: cassandra
+    key_password: cassandra
+    truststore: .truststore
+    truststore_password: cassandra
+    # More advanced defaults below:
+    # protocol: TLS
+    # cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA]
+
+# DSE File System options
+dsefs_options:
+  enabled: false
+
+  # Keyspace for storing the DSE FS metadata
+  keyspace_name: dsefs
+
+  # The local directory for storing node-local metadata e.g. the node identifier
+  # The amount of data stored there is tiny, so no special throughput, latency nor capacity are required.
+  # The work directory must not be shared by DSE FS nodes.
+  work_dir: /var/lib/dsefs
+
+  # Port for DSE FS clients, the service on this port will be bound to RPC address.
+  public_port: 5598
+
+  # Port for internode communication, must be not visible from outside of the cluster. It will be bound to listen address.
+  private_port: 5599
+
+  # Set of directories for storing the file data. 'dir' attribute is mandatory.
+  #     - dir: /var/lib/dsefs/data
+  #       storage_weight: 1.0
+  #       min_free_space: 5368709120
+  #     - dir: /other/device
+  #       storage_weight: 1.5
+  # It is recommended to put them on different physical devices than devices used for Cassandra.
+  # Using multiple directories on JBOD improves performance and capacity.
+  data_directories:
+    - dir: /var/lib/dsefs/data
+      # How much data should be placed in this directory relative to other directories in the cluster
+      storage_weight: 1.0
+      # Reserved space (in bytes) that is not going to be used for storing blocks
+      min_free_space: 5368709120
+
+  # # More advanced settings below:
+  # # How long DseFs Server is going to wait for services to bootstrap
+  # service_startup_timeout_ms: 30000
+  # # How long DseFs Server is going to wait for services to close
+  # service_close_timeout_ms: 600000
+  # # How long DseFs Server is going to wait close all pending connections during shutdown
+  # server_close_timeout_ms: # Integer.MAX_VALUE
+  # gossip_options:
+  #   # The delay between gossip rounds
+  #   round_delay_ms: 5000
+  #   # How long to wait after registering the Location and reading back all other Locations from
+  #   # Cassandra
+  #   startup_delay_ms: 5000
+  #   # How long to wait after announcing shutdown before shutting down the node
+  #   shutdown_delay_ms: 30000
+  # rest_options:
+  #   # How long RestClient is going to wait for a response corresponding to a given request
+  #   request_timeout_ms: 330000
+  #   # How long RestClient is going to wait for establishing a new connection
+  #   connection_open_timeout_ms: 55000
+  #   # How long RestClient is going to wait until all pending transfers are complete before closing
+  #   client_close_timeout_ms: 60000
+  #   # How long to wait for the server rest call to complete
+  #   server_request_timeout_ms: 300000
+  # transaction_options:
+  #   # How long to allow a transaction to run before considering it for timing out and rollback
+  #   transaction_timeout_ms: 3000
+  #   # How long to wait before retrying a transaction aborted due to a conflict
+  #   conflict_retry_delay_ms: 200
+  #   # How long to wait before retrying a failed transaction payload execution
+  #   execution_retry_delay_ms: 1000
+  #   # How many times to retry executing the payload before signaling the error to the application
+  #   execution_retry_count: 3
+
+# Audit logging options
+audit_logging_options:
+  enabled: <%= node['cassandra']['dse']['audit_logging_options']['enabled'] %>
+  # The logger used for logging audit information
+  # Available loggers are:
+  #   CassandraAuditWriter: logs audit info to a cassandra table. This logger can be run either synchronously, or
+  #                         asynchronously. Audit logs are stored in the dse_audit.audit_log table.
+  #                         When run synchronously, a query will not execute until it has been written
+  #                         to the audit log table successfully. If there is a failure between when an audit event is
+  #                         written, and it's query is executed, the audit logs may contain queries that were never
+  #                         executed.
+  #   SLF4JAuditWriter:     logs audit info to an slf4j logger. The logger name is `SLF4JAuditWriter`, and can be configured
+  #                         in the logback.xml file.
+  logger: <%= node['cassandra']['dse']['audit_logging_options']['logger'] %>
+
+  # Comma separated list of audit event categories to be included or excluded from the audit log.
+  # Defaults to including all categories and keyspaces.
+  # Categories are: QUERY, DML, DDL, DCL, AUTH, ADMIN, ERROR
+  # Specify either included or excluded categories. Specifying both is an error
+  <%= !node['cassandra']['dse']['audit_logging_options']['included_categories'].empty? ? "included_categories: #{node['cassandra']['dse']['audit_logging_options']['included_categories']}" : "# included_categories:" %>
+  <%= !node['cassandra']['dse']['audit_logging_options']['excluded_categories'].empty? ? "excluded_categories: #{node['cassandra']['dse']['audit_logging_options']['excluded_categories']}" : "# excluded_categories:" %>
+
+  # Comma separated list of keyspaces to be included or excluded from the audit log.
+  # Specify either included or excluded keyspaces. Specifying both is an error
+  <%= !node['cassandra']['dse']['audit_logging_options']['included_keyspaces'].empty? ? "included_keyspaces: #{node['cassandra']['dse']['audit_logging_options']['included_keyspaces']}" : "# included_keyspaces:" %>
+  <%= !node['cassandra']['dse']['audit_logging_options']['excluded_keyspaces'].empty? ? "excluded_keyspaces: #{node['cassandra']['dse']['audit_logging_options']['excluded_keyspaces']}" : "# excluded_keyspaces:" %>
+
+  # The amount of time, in hours, audit events are retained by supporting loggers
+  # Currently, only the CassandraAuditWriter supports retention time
+  # values of 0 or less retain events forever
+  retention_time: <%= node['cassandra']['dse']['audit_logging_options']['retention_time'] %>
+
+  cassandra_audit_writer_options:
+    # sets the mode the writer runs in.
+    #
+    # When run synchronously, a query is not executed until the audit event is successfully written.
+    #
+    # When run asynchronously, audit events are queued for writing to the audit table, but are
+    # not necessarily logged before the query executes. A pool of writer threads consumes the
+    # audit events from the queue, and writes them to the audit table in batch queries. While
+    # this substantially improves performance under load, if there is a failure between when
+    # a query is executed, and it's audit event is written to the table, the audit table may
+    # be missing entries for queries that were executed.
+    # valid options are 'sync' and 'async'
+    mode: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['mode'] %>
+
+    # The maximum number of events the writer will dequeue before writing them out to the table. If you're seeing
+    # warnings in your logs about batches being too large, decrease this value. Increasing batch_size_warn_threshold_in_kb
+    # in cassandra.yaml is also an option, but make sure you understand the implications before doing so.
+    #
+    # Only used in async mode. Must be >0
+    batch_size: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['batch_size'] %>
+
+    # The maximum amount of time in milliseconds an event will be dequeued by a writer before being written out. This
+    # prevents events from waiting too long before being written to the table when there's not a lot of queries happening.
+    #
+    # Only used in async mode. Must be >0
+    flush_time: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['flush_time'] %>
+
+    # The number of worker threads asynchronously logging events to the CassandraAuditWriter.
+    #
+    # Only used in async mode. Must be >0
+    num_writers: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['num_writers'] %>
+
+    # The size of the queue feeding the asynchronous audit log writer threads. When there are more events being
+    # produced than the writers can write out, the queue will fill up, and newer queries will block until there
+    # is space on the queue.
+    # If a value of 0 is used, the queue size will be unbounded, which can lead to resource exhaustion under
+    # heavy query load.
+    queue_size: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['queue_size'] %>
+
+    # the consistency level used to write audit events
+    write_consistency: <%= node['cassandra']['dse']['audit_logging_options']['cassandra_audit_writer_options']['write_consistency'] %>
+
+    # Where dropped events are logged
+    # dropped_event_log: /var/log/cassandra/dropped_audit_events.log
+
+    # Partition days into hours by default
+    # day_partition_millis: 3600000
+
+# If enabled, system tables that may contain sensitive information (system.batchlog,
+# system.paxos), hints files and Cassandra commit logs are encrypted with the
+# encryption settings below.
+#
+# If Solr index encryption is enabled, Solr index files are also encrypted with the settings below.
+# If backing C* table encryption is enabled, DSE search commit log is encrypted with settings below.
+#
+# When enabling system table encryption on a node with existing data, run
+# `nodetool upgradesstables -a` on the listed tables to encrypt existing data
+#
+# When tracing is enabled, sensitive info will be written into the tables in the
+# system_traces keyspace. Those tables should be configured to encrypt their data
+# on disk by using an encrypting compressor.
+system_info_encryption:
+  enabled: <%= node['cassandra']['dse']['system_info_encryption']['enabled'] %>
+  cipher_algorithm: <%= node['cassandra']['dse']['system_info_encryption']['cipher_algorithm'] %>
+  secret_key_strength: <%= node['cassandra']['dse']['system_info_encryption']['secret_key_strength'] %>
+  chunk_length_kb: <%= node['cassandra']['dse']['system_info_encryption']['chunk_length_kb'] %>
+  # the name of the keys file that will be created to encrypt system tables.
+  # This file will be created at <system_key_directory>/system/<key_name>
+  key_name: <%= node['cassandra']['dse']['system_info_encryption']['key_name'] %>
+
+  # selects an alternate key provider for local encryption. Useful for
+  # using a kmip host as a key provider
+  # key_provider: KmipKeyProviderFactory
+
+  # if  KmipKeyProviderFactory is used for system_info_encryption, this specified
+  # the kmip host to be used
+  # kmip_host: kmip_host_name
+
+# Retries setting when hive inserts data to C* table. insert_max_retries is max number of retries
+# insert_retry_sleep_period is the period of time in milliseconds between retries
+hive_options:
+  insert_max_retries: 6
+  insert_retry_sleep_period: 50
+
+# Connection settings for key servers supporting the kmip protocol
+# this allows DSE's encryption features to use keys that are not stored
+# on the same machine running DSE.
+#
+# Hosts are configured as <kmip_host_name> : <connection_settings>, which maps a user definable
+# name to a set of hosts, truststores, etc used with a particular key server. This name is then
+# used when referring to kmip hosts. DSE supports multiple kmip hosts.
+# kmip_hosts:
+  # the unique name of this kmip host/cluster which is specified in the table schema
+  # kmip_host_name:
+    # comma separated list of kmip hosts host[:port]
+    # The current implementation of KMIP connection management only supports failover, so all requests will
+    # go through a single KMIP server. There is no load balancing. This is because there aren't any KMIP servers
+    # available (that we've found) that support read replication, or other strategies for availability.
+    #
+    # Hosts are tried in the order they appear here. So add them in the same sequence they'll fail over in
+    # hosts: kmip1.yourdomain.com, kmip2.yourdomain.com
+
+    # keystore/truststore info
+    # keystore_path: /path/to/keystore.jks
+    # keystore_type: jks
+    # keystore_password: password
+    # truststore_path: /path/to/truststore.jks
+    # truststore_type: jks
+    # truststore_password: password
+
+    # Keys read from the KMIP hosts are cached locally for the period of time specified below.
+    # The longer keys are cached, the fewer requests are made to the key server, but the longer
+    # it takes for changes (ie: revokation) to propagate to the DSE node
+    # key_cache_millis: 300000
+
+    # socket timeout in milliseconds
+    # timeout: 1000
+
+# When 'driver' DSE Search will use Solr cursor paging when pagination is enabled by the CQL driver.
+#
+# When 'off' DSE Search will ignore the driver's pagination settings and use normal Solr paging unless:
+#   - The current workload is an analytics workload (ex. SearchAnalytics).
+#   - The query parameter 'paging' is set to 'driver'.
+#
+# Default is 'off'
+#
+# cql_solr_query_paging: off
+
+# Local settings for tiered storage
+#
+# Tiered supports multiple disk configurations, which are configured as <config_name> : <config_settings>, and specified in DDL
+# The tiers themselves are unnamed, and are just collections of paths, which need to be defined in the order they're to be used.
+# Typically, you'd put your fastest storage in the top tier, and go down from there.
+#
+# Storage configurations don't need to be homogenous across the cluster, and internally, each node will only make use of the
+# the number of tiers it actually has configured, or the number of tiers configured to be used in the DDL, whichever is less.
+#
+# Although the behavior of the tiered strategy for a given table is configured in the DDL, these settings can
+# be overridden locally, per node, by specifying 'local_options' : {<k>:<v>, ...} in a config. This can be useful for testing
+# options before deploying cluster wide, or for storage configurations which don't map cleanly to the DDL configuration.
+#
+#tiered_storage_options:
+#  strategy1:
+#    tiers:
+#      - paths:
+#          - /mnt1
+#          - /mnt2
+#
+#      - paths:
+#          - /mnt3
+#          - /mnt4
+#
+#      - paths:
+#          - /mnt5
+#          - /mnt6
+
+# DSE Advanced Replication configuration settings
+# DSE Advanced replication supports one-way distributed data replication from remote
+# clusters to central data hubs.
+# When conf_driver_password_encryption_enabled: true, the driver password stored in the advrep config is expected to be encrypted
+#                                                     with the dse configuration encryption using the systemkey. The same systemkey
+#                                                     that was used to create the driver password, must be copied to every node in
+#                                                     the cluster.
+#advanced_replication_options:
+#  enabled: false
+#  conf_driver_password_encryption_enabled: false
+
+# These internode_messaging_options configure network services for internal communication
+# for all nodes. These settings must be identical on all nodes in the cluster.
+internode_messaging_options:
+  # TCP listen port (mandatory)
+  port: 8609
+
+  # Max message frame length (default 256MB)
+  # frame_length_in_mb: 256
+
+  # Number of server acceptor threads (default is number of available processors)
+  # server_acceptor_threads: 8
+
+  # Number of server worker threads (default is number of available processors * 8)
+  # server_worker_threads: 16
+
+  # Max number of client connections
+  # client_max_connections: 100
+
+  # Number of client worker threads (default is number of available processors * 8)
+  # client_worker_threads: 16
+
+  # Timeout for comm handshake process (default is 10 seconds)
+  # handshake_timeout_seconds: 10
+
+# System namespace for DSE Graph contains all system-level configuration options
+# and those shared between graph instances.
+graph:
+  # Maximum time to wait for a analytic traversal to evaluate. Value: a duration
+  # composed of a number and a unit, such as "10 h", "45 sec", "60 ms", or an
+  # ISO-8601 duration string such as "PT1M10S".
+  analytic_evaluation_timeout: PT168H
+
+  # The maximum number of threads to use for queries to Cassandra. By default this is 10 * gremlinPool.
+  #max_query_threads:
+
+  # The maximum number of CQL queries that can be queued as a result of Gremlin
+  # requests.  If that number is exceeded, new queries are rejected.
+  max_query_queue: 10000
+
+  # Maximum time to wait for a real-time traversal to evaluate. Value: a duration
+  # composed of a number and a unit, such as "10 h", "45 sec", "60 ms", or an
+  # ISO-8601 duration string such as "PT1M10S".
+  realtime_evaluation_timeout: 30 sec
+
+  # Maximum time to wait for cassandra to agree on schema versions before timing
+  # out. Value: a duration composed of a number and a unit, such as "10 h", "45
+  # sec", "60 ms", or an ISO-8601 duration string such as "PT1M10S".
+  schema_agreement_timeout: 10 sec
+
+  # Maximum time to wait for a system-based request to execute. Value: a duration
+  # composed of a number and a unit, such as "10 h", "45 sec", "60 ms", or an
+  # ISO-8601 duration string such as "PT1M10S".
+  system_evaluation_timeout: PT3M
+
+  # The number of samples to keep when aggregating. Value: integer.
+  window_size: 100000
+
+  # Configuration options for id assignment and partitioning strategies.
+  ids:
+    # At what percentage of consumed ids should a new id block allocation be
+    # triggered. Value must be between 0 and 1. Value: double.
+    block_renew: 0.8
+
+    # The maximum number of times a transaction will allocate an ID from a single
+    # community before switching to a different community. Value: long.
+    community_reuse: 28
+
+    # An integer between 1 and 2^24 (both inclusive) that affects maximum ID capacity
+    # and the maximum storage space used by ID allocations.  Lower values reduce the
+    # number of available IDs but make ID allocation more efficient in both storage
+    # space and lightweight transaction overhead.  Higher values consume more storage
+    # space and LWT overhead, but make more of the total ID space available. Value:
+    # integer.
+    id_hash_modulus: 20
+
+    # Member IDs are allocated from communities in blocks of this size. Value:
+    # integer.
+    member_block_size: 512
+
+  # Contains all registered state listeners identified by their name.
+  listener:
+#     # On the following line, "listener_name" is a placeholder string.  This can be
+#     # changed to an arbitrary string composed of lowercase letters, numbers, and
+#     # underscores, where the string begins with a lowercase letter.
+#     listener_name:
+#       # The names of state types that are ignored. All state types but those given are
+#       # listened to. Value: YAML-formatted list of strings.
+#       black_types:  # This list is empty by default
+#
+#       # The interval in which the state values are logged. Value: a duration composed of
+#       # a number and a unit, such as "10 h", "45 sec", "60 ms", or an ISO-8601 duration
+#       # string such as "PT1M10S".
+#       interval: PT1H
+#
+#       # The type of the state listener. Must be one of: [slf4j]. Value: string.
+#       type: slf4j
+#
+#       # The names of state types that should be listened. Only those state types are
+#       # listened to and all others ignored. Value: YAML-formatted list of strings.
+#       white_types:  # This list is empty by default
+#
+  # Configuration options graph's internal query forwarding and lightweight
+  # messaging system.
+  msg:
+    # Graph messages must be acknowledged within this interval, or else the message
+    # will be assumed dropped/failed.  Graph will retry the message or fail the
+    # responsible request if the retry limit has been exceeded. Value: a duration
+    # composed of a number and a unit, such as "10 h", "45 sec", "60 ms", or an
+    # ISO-8601 duration string such as "PT1M10S".
+    graph_msg_timeout: 5 sec
+
+  # Contains all registered event observers identified by their name.
+  observer:
+#     # On the following line, "observer_name" is a placeholder string.  This can be
+#     # changed to an arbitrary string composed of lowercase letters, numbers, and
+#     # underscores, where the string begins with a lowercase letter.
+#     observer_name:
+#       # The names of event types that are ignored. All event types but those given are
+#       # observed. Value: YAML-formatted list of strings.
+#       black_types:  # This list is empty by default
+#
+#       # The names of the graphs for which events are observed. Value:
+#       # YAML-formatted list of strings.
+#       observed_graphs:  # This list is empty by default
+#
+#       # Threshold at which slow events get reported. Value: a duration composed of a
+#       # number and a unit, such as "10 h", "45 sec", "60 ms", or an ISO-8601 duration
+#       # string such as "PT1M10S".
+#       slow_threshold: PT5M
+#
+#       # The type of the event observer. Must be one of: [slf4j,
+#       # slow_request]. Value: string.
+#       type: slf4j
+#
+#       # The names of event types that should be observed. Only those event types are
+#       # observed and all others ignored. Value: YAML-formatted list of strings.
+#       white_types:  # This list is empty by default
+#
+  # Shared data.
+  shared_data:
+    # The interval between refreshes. Value: a duration composed of a number and a
+    # unit, such as "10 h", "45 sec", "60 ms", or an ISO-8601 duration string such as
+    # "PT1M10S".
+    refresh_interval: PT1M
+
+  # This is the default and generally minimal configuration for Gremlin Server. The full list of
+  # configuration options can be found in the TinkerPop documentation:
+  #
+  # http://tinkerpop.apache.org/docs/3.1.0-incubating/#_configuring_2
+  #
+  # Note that for DSE Graph, the top-level configurations in Gremlin Server are embedded in a key called
+  # gremlin_server. It is further important to understand that while most configuration options for
+  # Gremlin Server come from these settings, there are some that are ignored and overridden:
+  #
+  # - authentication: This setting is ignored as Gremlin Server delegates all security to DSE.
+  # - channelizer: The Channelizer implementation for Gremlin Server is always set to
+  #   DseWebSocketChannelizer which includes hooks into DSE audit and authentication features.
+  # - graphs: The list of graphs are completely ignored. Graph instances are created when they are
+  #   requested.
+  # - host: The host is ignored, it is always equal to rpc_address from cassandra.yaml
+  gremlin_server:
+    maxContentLength: 65536000
+    maxChunkSize: 4096000
+    port: <%= node[:graph][:port] %> #8182
+    serializers:
+      - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV1d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistry], classResolverSupplier: com.datastax.bdp.graph.impl.tinkerpop.io.DseClassResolverProvider }}
+      - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoLiteMessageSerializerV1d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistry], classResolverSupplier: com.datastax.bdp.graph.impl.tinkerpop.io.DseClassResolverProvider }}
+      - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV1d0, config: { serializeResultToString: true }}
+      - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphSONMessageSerializerGremlinV1d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistry] }}
+      - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphSONMessageSerializerV1d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistry] }}
+    scriptEngines:
+      gremlin-groovy:
+        config:
+          compilerCustomizerProviders:
+            "org.apache.tinkerpop.gremlin.groovy.jsr223.customizer.ThreadInterruptCustomizerProvider": []
+            "org.apache.tinkerpop.gremlin.groovy.jsr223.customizer.InterpreterModeCustomizerProvider": []
+
+  # This option controls the way schemas are handled. Use one of:
+  #   Development - No schema is required
+  #   Production - Schemas are required
+  schema_mode: Production
