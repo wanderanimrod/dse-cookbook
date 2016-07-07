@@ -1,6 +1,6 @@
 language: ruby
 bundler_args: --without integration
 rvm:
-  - 2.6.6
+  - 2.3.0
 script: 
   - bundle exec rake travis
