@@ -33,7 +33,11 @@ num_tokens: <%=node[:cassandra][:num_tokens]%> # 128
 # vnodes.
 #
 # Only supported with the Murmur3Partitioner.
+<% if node[:cassandra][:allocate_tokens_for_keyspace] -%>
+allocate_tokens_for_keyspace: <%= node[:cassandra][:allocate_tokens_for_keyspace] %>
+<% else -%>
 # allocate_tokens_for_keyspace: KEYSPACE
+<% end -%>
 
 # initial_token allows you to specify tokens manually.  While you can use # it with
 # vnodes (num_tokens > 1, above) -- in which case you should provide a
@@ -404,7 +408,11 @@ concurrent_materialized_view_writes: 32
 # Possible values are:
 # ssd (for solid state disks, the default)
 # spinning (for spinning disks)
+<% if node[:cassandra][:disk_optimization_strategy] -%>
+disk_optimization_strategy: <%= node[:cassandra][:disk_optimization_strategy] %>
+<% else -%>
 # disk_optimization_strategy: ssd
+<% end -%>
 
 # Total permitted memory to use for memtables. Cassandra will stop
 # accepting writes when the limit is exceeded until a flush completes,
