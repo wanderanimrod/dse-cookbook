@@ -68,6 +68,10 @@ default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']   = nil
 default['cassandra']['permissions_validity_in_ms']  = 2000
 
+# cassandra > 3.0 / dse > 5.0
+default['cassandra']['allocate_tokens_for_keyspace'] = nil
+default['cassandra']['disk_optimization_strategy'] = nil
+
 # Role based search to assign seed nodes.
 default['cassandra']['role_based_seeds'] = false
 default['cassandra']['seed_role']        = 'role:dse-seed'
