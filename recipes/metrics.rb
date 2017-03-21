@@ -2,7 +2,7 @@ template "#{node['cassandra']['dse']['conf_dir']}/cassandra/cassandra-metrics.ya
   source 'cassandra-metrics.yaml.erb'
   owner node['cassandra']['user']
   group node['cassandra']['group']
-  mode 0644
+  mode 0o644
   notifies :restart, "service[#{node['cassandra']['dse']['service_name']}]"
   variables(:yaml_config => hash_to_yaml_string(node['cassandra']['metrics_reporter']['config']))
 end

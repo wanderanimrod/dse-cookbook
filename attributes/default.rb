@@ -25,8 +25,7 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libsolr',
                                                   'dse-libsqoop',
                                                   'dse-pig',
-                                                  'dse-demos'
-                                                 ]
+                                                  'dse-demos']
 
 unless node['cassandra']['dse_version'] =~ /4\.0.*/
   default['cassandra']['packages'] << 'dse-libspark'
