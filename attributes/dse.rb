@@ -1,7 +1,7 @@
 default['cassandra']['dse']['snitch']           = 'SimpleSnitch'
-default['cassandra']['dse']['service_name']     =  'dse'
+default['cassandra']['dse']['service_name']     = 'dse'
 default['cassandra']['dse']['conf_dir']         = '/etc/dse'
-default['cassandra']['dse']['lib_dir']         = '/usr/share/dse/cassandra/lib'
+default['cassandra']['dse']['lib_dir'] = '/usr/share/dse/cassandra/lib'
 default['cassandra']['dse']['repo_user'] = 'user'
 default['cassandra']['dse']['repo_pass'] = 'password'
 default['cassandra']['dse']['rhel_repo_url'] = "http://#{node['cassandra']['dse']['repo_user']}:#{node['cassandra']['dse']['repo_pass']}@rpm.datastax.com/enterprise"
