@@ -5,6 +5,8 @@ license 'Apache 2.0'
 description 'Installs/Configures Datastax Enterprise.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '3.0.36'
+source_url 'https://github.com/target/dse-cookbook'
+issues_url 'https://github.com/target/dse-cookbook/issues'
 
 %w(redhat centos).each do |name|
   supports name, '>= 6.4'
@@ -17,4 +19,3 @@ depends 'yum', '~> 3.5'
 depends 'yum-epel', '~> 0.6'
 depends 'apt', '~> 2.0'
 depends 'build-essential', '~> 3.0'
-depends 'ohai', '~> 3.0.1'
