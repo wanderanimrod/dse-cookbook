@@ -34,3 +34,6 @@ dc_suffix=_<%= node['datacenter'] %>
 <% else %>
 #dc_suffix=
 <% end %>
+
+# Uncomment the following line to make this snitch prefer the internal ip when possible, as the Ec2MultiRegionSnitch does.
+# prefer_local=true

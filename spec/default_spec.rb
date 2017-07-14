@@ -155,19 +155,43 @@ describe 'dse with default settings' do
   end
 end
 
-describe 'dse with node[\'cassandra\'][\'dse_version\'] >= 5.0.0-1' do
-  cached(:chef_run) do
-    ChefSpec::ServerRunner.new do |node|
-      node.set['cassandra']['dse_version'] = '5.0.0-1'
-    end.converge('dse')
+describe 'dse with node[\'cassandra\'][\'dse_version\'] >= 5.1.1-1' do
+  context 'when using default values' do
+    cached(:chef_run) do
+      ChefSpec::ServerRunner.new do |node|
+        node.set['cassandra']['dse_version'] = '5.1.1-1'
+      end.converge('dse')
+    end
+
+    it 'creates the template /etc/dse/cassandra/jvm.options' do
+      expect(chef_run).to create_template('/etc/dse/cassandra/jvm.options').with(
+        source: 'cassandra-jvm.options.erb',
+        owner: 'cassandra',
+        group: 'cassandra'
+      )
+    end
   end
 
-  it 'creates the template /etc/dse/cassandra/jvm.options' do
-    expect(chef_run).to create_template('/etc/dse/cassandra/jvm.options').with(
-      source: 'cassandra-jvm.options.erb',
-      owner: 'cassandra',
-      group: 'cassandra'
-    )
+  context 'when encryption is off' do
+    cached(:chef_run) do
+      ChefSpec::ServerRunner.new do |node|
+        node.set['cassandra']['dse_version'] = '5.1.1-1'
+      end.converge('dse')
+    end
+
+    # setting to an empty password causes dse 5.1.1 to not start
+    it 'does not render client_encryption_options settings' do
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('client_encryption_options.optional'))
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('client_encryption_options.keystore'))
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('client_encryption_options.keystore_password'))
+    end
+
+    it 'does not render server_encryption_options settings' do
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('server_encryption_options.keystore'))
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('server_encryption_options.keystore_password'))
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('server_encryption_options.truststore'))
+      expect(chef_run).not_to render_file('/etc/dse/cassandra/cassandra.yaml').with_content(has_yaml_key('server_encryption_options.truststore_password'))
+    end
   end
 end
 
