@@ -1,6 +1,16 @@
 language: ruby
-bundler_args: --without integration
+bundler_args: "--without integration"
 rvm:
-  - 2.3.0
-script: 
-  - bundle exec rake travis
+- 2.3.0
+script:
+- bundle exec rake travis
+deploy:
+  provider: chef-supermarket
+  user_id: target-cookbooks
+  cookbook_category: Other
+  client_key: target-cookbooks.pem
+  on:
+    tags: true
+before_install:
+- openssl aes-256-cbc -K $encrypted_0b6720205691_key -iv $encrypted_0b6720205691_iv
+  -in target-cookbooks.pem.enc -out target-cookbooks.pem -d
