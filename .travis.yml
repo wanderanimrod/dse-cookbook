@@ -8,8 +8,8 @@ script:
 deploy:
   on:
     tags: true
-    edge:
-      branch: ruby-2.3
+  edge:
+    branch: ruby-2.3
   provider: chef-supermarket
   user_id: target-cookbooks
   cookbook_category: Other
