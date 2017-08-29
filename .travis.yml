@@ -6,10 +6,11 @@ rvm:
 script:
 - bundle exec rake travis
 deploy:
-  on:
-    tags: true
   edge:
     branch: ruby-2.3
+  on:
+    tags: true
+
   provider: chef-supermarket
   user_id: target-cookbooks
   cookbook_category: Other
