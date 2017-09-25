@@ -1095,9 +1095,9 @@ server_encryption_options:
     internode_encryption: <%= node['cassandra']['dse']['internode_encryption'] %> # none
     <% if node['cassandra']['dse']['internode_encryption'] != 'none' %>
     keystore: <%= node['cassandra']['dse']['keystore'] %> # resources/dse/conf/.keystore
-    keystore_password: <%= @ssl_password %> # cassandra
+    keystore_password: <%= @ssl_password.call %> # cassandra
     truststore: <%= node['cassandra']['dse']['truststore'] %> # resources/dse/conf/.truststore
-    truststore_password: <%= @ssl_password %> # cassandra
+    truststore_password: <%= @ssl_password.call %> # cassandra
     <% end %>
     # More advanced defaults below:
     # protocol: TLS
@@ -1114,7 +1114,7 @@ client_encryption_options:
     # If enabled and optional is set to true encrypted and unencrypted connections are handled.
     optional: false
     keystore: <%= node['cassandra']['dse']['keystore'] %> # resources/dse/conf/.keystore
-    keystore_password: <%= @ssl_password %> # cassandra
+    keystore_password: <%= @ssl_password.call %> # cassandra
     <% end %>
     # require_client_auth: false
     # Set trustore and truststore_password if require_client_auth is true
